@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <title>Le cassette di Navid</title>
 <style>
 :root {
@@ -119,9 +120,44 @@ footer {
 footer .heart { font-size: 1.3rem; }
 .hidden { display: none !important; }
 @media (min-width: 560px) { .people { grid-template-columns: 1fr 1fr 1fr; } }
+#gate {
+  position: fixed; inset: 0; z-index: 9999; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+body.unlocked #gate { display: none; }
+body:not(.unlocked) > :not(#gate):not(script) { display: none !important; }
+.gate-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  padding: 32px 28px; max-width: 360px; width: 100%; text-align: center;
+  box-shadow: 0 12px 40px rgba(59,45,32,.12);
+}
+.gate-title { font-size: 1.5rem; margin: 0 0 8px; }
+.gate-sub { color: var(--soft); margin: 0 0 20px; font-size: .95rem; }
+#gate-form { display: flex; flex-direction: column; gap: 12px; }
+#gate-pw {
+  font-size: 1.1rem; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--line); background: #fff; color: var(--ink);
+  text-align: center;
+}
+#gate-form button {
+  font-size: 1.05rem; padding: 12px; border: 0; border-radius: 12px;
+  background: var(--accent); color: #fff; cursor: pointer;
+}
+.gate-err { color: #a33b1f; min-height: 1.4em; margin: 4px 0 0; font-size: .9rem; }
 </style>
 </head>
 <body>
+<div id="gate">
+  <div class="gate-card">
+    <h1 class="gate-title">Le cassette di Navid</h1>
+    <p class="gate-sub">Questa pagina &egrave; privata.<br>Inserisci la password per entrare.</p>
+    <form id="gate-form" autocomplete="off">
+      <input id="gate-pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+      <button type="submit">Apri</button>
+    </form>
+    <p id="gate-err" class="gate-err"></p>
+  </div>
+</div>
 
 <header class="hero">
   <h1>📼 Le cassette di Navid</h1>
@@ -1988,6 +2024,31 @@ function clearFilter() {
   });
   bar.classList.remove('show');
 }
+</script>
+<script>
+(function() {
+  var HASH = "6c799e0b6ed0a4d94401fe6820626caf3c3a01ef55a7561032331abb5031a7ae";
+  function unlock() {
+    document.body.classList.add('unlocked');
+    try { sessionStorage.setItem('cassette-ok', '1'); } catch (e) {}
+  }
+  try {
+    if (sessionStorage.getItem('cassette-ok') === '1') { unlock(); return; }
+  } catch (e) {}
+  var form = document.getElementById('gate-form');
+  form.addEventListener('submit', function(ev) {
+    ev.preventDefault();
+    var pw = document.getElementById('gate-pw').value;
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw)).then(function(buf) {
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function(b) {
+        return ('0' + b.toString(16)).slice(-2);
+      }).join('');
+      if (hex === HASH) { unlock(); }
+      else { document.getElementById('gate-err').textContent = 'Password sbagliata, riprova.'; }
+    });
+  });
+  document.getElementById('gate-pw').focus();
+})();
 </script>
 </body>
 </html>
