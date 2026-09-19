@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le cassette di Navid</title>
+<style>
+:root {
+  --bg: #faf5ec; --card: #fffdf8; --ink: #3b2d20; --soft: #7a6753;
+  --accent: #b4552d; --accent-soft: #f3ddd0; --line: #e8dcc8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.55;
+}
+.hero {
+  background: linear-gradient(160deg, #b4552d, #8f3d1f);
+  color: #fff8f0; padding: 2.6rem 1.25rem 2.2rem; text-align: center;
+}
+.hero h1 { margin: 0 0 .4rem; font-size: 2rem; letter-spacing: .01em; }
+.hero .ded { font-size: 1.05rem; opacity: .95; margin: .2rem 0 1rem; }
+.hero p.intro { max-width: 34rem; margin: 0 auto 1.2rem; font-size: .98rem; }
+.stats { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+.stat { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35);
+  border-radius: 999px; padding: .35rem .9rem; font-size: .85rem; }
+nav.top {
+  position: sticky; top: 0; z-index: 10; background: var(--card);
+  border-bottom: 1px solid var(--line); display: flex; gap: .2rem;
+  padding: .55rem .8rem; overflow-x: auto;
+}
+nav.top a {
+  color: var(--accent); text-decoration: none; font-weight: 600; font-size: .92rem;
+  padding: .45rem .8rem; border-radius: 999px; white-space: nowrap;
+}
+nav.top a:active { background: var(--accent-soft); }
+main { max-width: 44rem; margin: 0 auto; padding: 0 1rem 3rem; }
+section.block { padding-top: 1.6rem; }
+h2.sec { font-size: 1.35rem; margin: 0 0 .3rem; }
+.sec-sub { color: var(--soft); margin: 0 0 1rem; font-size: .95rem; }
+.people { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.person {
+  background: var(--card); border: 2px solid var(--line); border-radius: 1rem;
+  padding: .9rem .8rem; text-align: left; cursor: pointer; color: var(--ink);
+  display: flex; flex-direction: column; gap: .25rem; font: inherit;
+}
+.person.active { border-color: var(--accent); background: #fff6ef; }
+.p-icon { font-size: 2rem; }
+.p-name { font-weight: 700; font-size: .98rem; }
+.p-desc { font-size: .82rem; color: var(--soft); }
+.p-count { font-size: .78rem; color: var(--accent); font-weight: 700; }
+.filterbar {
+  display: none; align-items: center; justify-content: space-between;
+  background: #fff6ef; border: 1px solid var(--accent); border-radius: .8rem;
+  padding: .6rem .9rem; margin: 1rem 0; font-size: .9rem;
+}
+.filterbar.show { display: flex; }
+.filterbar button {
+  background: var(--accent); color: #fff; border: 0; border-radius: 999px;
+  padding: .45rem 1rem; font-size: .88rem; font-weight: 700; cursor: pointer;
+}
+.tape { margin-top: 2rem; }
+.tape-head h2 { margin: 0; font-size: 1.3rem; }
+.tape-meta { color: var(--soft); font-size: .88rem; margin: .15rem 0 0; }
+.tape-desc { color: var(--soft); font-size: .95rem; margin: .5rem 0 1rem; }
+.cards { display: flex; flex-direction: column; gap: .9rem; }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 1.1rem;
+  padding: 1.1rem 1rem;
+}
+.story-head { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+.story-head h3 { margin: 0; font-size: 1.05rem; }
+.dur { flex: none; background: var(--accent-soft); color: var(--accent);
+  font-weight: 700; font-size: .82rem; border-radius: 999px; padding: .2rem .65rem; }
+.summary { margin: .55rem 0; font-size: .95rem; }
+.phrases { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0; }
+.phrases span {
+  background: #f6efe2; border: 1px solid var(--line); border-radius: .6rem;
+  padding: .25rem .6rem; font-size: .85rem; font-style: italic;
+}
+.voices { font-size: .88rem; color: var(--soft); margin: .45rem 0; }
+.voices ul { margin: .3rem 0 0; padding-left: 1.1rem; }
+.dates { font-size: .85rem; color: var(--soft); margin: .3rem 0; }
+.note {
+  border-radius: .7rem; padding: .55rem .8rem; font-size: .87rem; margin: .55rem 0;
+}
+.note.quiet { background: #e8f0fe; border: 1px solid #b9cdf3; }
+.note.soft { background: #fdf3e3; border: 1px solid #eed9ae; }
+audio.player { width: 100%; margin-top: .6rem; }
+audio.player.compact { margin-top: .4rem; height: 40px; }
+.theme { background: var(--card); border: 1px solid var(--line); border-radius: 1.1rem;
+  padding: 1.1rem 1rem; margin-top: 1rem; }
+.theme h2 { margin: 0 0 .35rem; font-size: 1.12rem; }
+.theme-intro { color: var(--soft); font-size: .93rem; margin: 0 0 .6rem; }
+.theme-entry { border-top: 1px dashed var(--line); padding: .8rem 0 .4rem; }
+.theme-note { margin: 0 0 .2rem; font-size: .93rem; }
+.theme-row { display: flex; flex-direction: column; gap: .1rem; }
+.theme-audio audio { width: 100%; }
+a.goto { color: var(--accent); font-size: .85rem; font-weight: 600; text-decoration: none;
+  align-self: flex-end; padding: .2rem 0; }
+.tl { position: relative; margin-top: 1rem; padding-left: 1.2rem;
+  border-left: 3px solid var(--accent-soft); display: flex; flex-direction: column; gap: 1rem; }
+.tl-item { background: var(--card); border: 1px solid var(--line); border-radius: 1rem;
+  padding: .9rem 1rem; position: relative; }
+.tl-item::before {
+  content: ""; position: absolute; left: calc(-1.2rem - 8px); top: 1.1rem;
+  width: 13px; height: 13px; border-radius: 50%; background: var(--accent);
+}
+.tl-date { font-weight: 800; font-size: 1.02rem; }
+.tl-age { color: var(--accent); font-size: .86rem; font-weight: 600; }
+.tl-ctx { margin: .4rem 0; font-size: .93rem; }
+.tl-foot { display: flex; justify-content: space-between; align-items: center; }
+.tl-badge { font-size: .8rem; color: var(--soft); }
+footer {
+  text-align: center; color: var(--soft); font-size: .85rem;
+  padding: 2rem 1.5rem 1rem; max-width: 34rem; margin: 0 auto;
+}
+footer .heart { font-size: 1.3rem; }
+.hidden { display: none !important; }
+@media (min-width: 560px) { .people { grid-template-columns: 1fr 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>📼 Le cassette di Navid</h1>
+  <p class="ded">Per la mamma Nara, con amore ❤️</p>
+  <p class="intro">Queste cassette dormivano in un cassetto da quarant&rsquo;anni. Dentro c&rsquo;&egrave; un bambino
+  di nome Navid &mdash; due, tre, quattro anni, un&rsquo;energia infinita &mdash; e la sua famiglia:
+  la mamma Nara, il babbo Faramarz, la nonna Morena che lui chiama &laquo;nannara&raquo;, il nonno Remo.
+  Premi play su una storia qualsiasi e torna indietro nel tempo.</p>
+  <div class="stats">
+    <span class="stat">📼 5 nastri</span>
+    <span class="stat">🎧 62 storie</span>
+    <span class="stat">⏳ 4 ore di voci</span>
+    <span class="stat">📅 1984–1986</span>
+  </div>
+</header>
+
+<nav class="top">
+  <a href="#famiglia">👨‍👩‍👦 Famiglia</a>
+  <a href="#nastri">📼 I nastri</a>
+  <a href="#temi">💫 I temi</a>
+  <a href="#tempo">🕰️ Linea del tempo</a>
+</nav>
+
+<main>
+  <section class="block" id="famiglia">
+    <h2 class="sec">La famiglia</h2>
+    <p class="sec-sub">Tocca una persona per vedere solo le storie dove si sente la sua voce.</p>
+    <div class="people">
+      <button class="person" data-person="navid">
+        <span class="p-icon">👦</span>
+        <span class="p-name">Il piccolo Navid</span>
+        <span class="p-desc">Ha 2–4 anni nei nastri. Chiacchiera, inventa, canta: la voce che riempie tutte le cassette.</span>
+        <span class="p-count">62 storie</span>
+      </button>
+
+      <button class="person" data-person="la mamma nara">
+        <span class="p-icon">👩</span>
+        <span class="p-name">La mamma Nara</span>
+        <span class="p-desc">La destinataria di questo sito. Il suo amore è la domanda che attraversa i nastri: «la mamma ti vuole bene?» — «tanto!»</span>
+        <span class="p-count">20 storie</span>
+      </button>
+
+      <button class="person" data-person="il babbo faramarz">
+        <span class="p-icon">👨</span>
+        <span class="p-name">Il babbo Faramarz</span>
+        <span class="p-desc">La sua voce annuncia le date dei nastri — «26 di giugno, dell&#x27;85» — mentre gioca con Navid.</span>
+        <span class="p-count">20 storie</span>
+      </button>
+
+      <button class="person" data-person="la nonna morena">
+        <span class="p-icon">👵</span>
+        <span class="p-name">La nonna Morena</span>
+        <span class="p-desc">La «nannara»: il bagnetto, le storie, le morali. La voce più presente accanto al piccolo Navid.</span>
+        <span class="p-count">28 storie</span>
+      </button>
+
+      <button class="person" data-person="il nonno">
+        <span class="p-icon">👴</span>
+        <span class="p-name">Il nonno Remo</span>
+        <span class="p-desc">L&#x27;operazione, la torta di compleanno più buona: il nonno c&#x27;è, anche da lontano.</span>
+        <span class="p-count">1 storie</span>
+      </button>
+
+      <button class="person" data-person="lorenzo">
+        <span class="p-icon">🧒</span>
+        <span class="p-name">Lorenzo</span>
+        <span class="p-desc">L&#x27;amico dell&#x27;asilo, nominato nei giochi e nei racconti.</span>
+        <span class="p-count">2 storie</span>
+      </button></div>
+  </section>
+
+  <section class="block" id="nastri">
+    <h2 class="sec">I nastri</h2>
+    <p class="sec-sub">Ogni storia ha il suo pulsante play: ascolti solo quell&rsquo;estratto.</p>
+    <div class="filterbar" id="filterbar">
+      <span id="filterlabel"></span>
+      <button id="clearfilter">Mostra tutto ✕</button>
+    </div>
+    
+    <section class="tape" id="tape-reg1a">
+      <div class="tape-head">
+        <div>
+          <h2>Con la nonna Morena</h2>
+          <p class="tape-meta">1985 · ~32 min · 10 storie</p>
+        </div>
+      </div>
+      <p class="tape-desc">Il nastro del cuore: il bagnetto, le canzoni, la storia del serpente raccontata il 26 giugno 1985.</p>
+      <div class="cards">
+    <article class="card story" id="story-reg1a-01" data-people="navid|la nonna morena|la mamma nara">
+      <div class="story-head">
+        <h3>Il bagnetto con la nannara</h3>
+        <span class="dur">4:16</span>
+      </div>
+      <p class="summary">Il nastro si apre nel bel mezzo del bagnetto: la nonna Morena lava il piccolo Navid e insieme scelgono lo shampoo — quello «della natura dolce». Arriva la domanda di rito: «la mamma ti vuole bene?» — e lui risponde «tanto!». Tra una risata e l&#x27;altra si parla dei suoi fucili giocattolo (uno l&#x27;ha perso, ne restano uno piccolo e uno grande) e dei compleanni: il migliore? «Quello del nonno» — per la torta.</p>
+      <div class="phrases"><span>💬 «Nannara.»</span><span>💬 «Tanto.»</span><span>💬 «Quello della nonno.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — fa il bagnetto, risponde alle domande e parla dei suoi fucili giocattolo e dei compleanni</li><li><b>la nonna Morena</b> — lo lava (la «nannara»), gli fa domande — «la mamma ti vuole bene?» — e lo coccola</li><li><b>il babbo Faramarz</b> — annuncia la data di registrazione («in febbraio, 85»)</li></ul></div>
+      <div class="dates">📅 in febbraio, 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-01.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-02" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>«Puglia, Puglia» — canta, dai!</h3>
+        <span class="dur">4:27</span>
+      </div>
+      <p class="summary">La nonna cerca di fargli cantare qualcosa — «canta, dai, per favore, canta» — ma Navid devia: canta lui una specie di filastrocca su «Puglia, Puglia», una parola-gioco che ripete come un mantra. Si vanta invece di essere forte come Superman: «io ho buttato fu forte e ce l&#x27;ho fatta». Un tratto in mezzo resta quasi incomprensibile per il fruscio del nastro: la trascrizione qui è solo un&#x27;ipotesi.</p>
+      <div class="phrases"><span>💬 «Puglia. Puglia.»</span><span>💬 «Una volta un cappuccetto.»</span><span>💬 «Io ho buttato fu forte e ce l&#x27;ho fatta.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — canta la filastrocca «Puglia, Puglia» e si vanta di essere forte come Superman</li><li><b>la nonna Morena</b> — cerca di farlo cantare — «canta, dai, per favore» — e lo asseconda nel gioco</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-02.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-03" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Il serpente a scuola di Sherman</h3>
+        <span class="dur">3:58</span>
+      </div>
+      <p class="summary">Il pezzo forte del nastro: Navid racconta con totale convinzione una storia inventata — un serpente alla scuola di Sherman (un compagno), con dentro anche Matteo. Qualcuno viene morso («mi ha morso!») e il serpente viene ammazzato; poi «l&#x27;alco» lo schiaccia con la macchina. È una storia, non un fatto: ma detta con la serietà assoluta dei quattro anni.</p>
+      <div class="phrases"><span>💬 «Allora, c&#x27;era una volta il serpente a scuola di Sherman, è venuto matò e Sherman è io.»</span><span>💬 «Mi ha morso, poi niente l&#x27;ha ammazzato.»</span><span>💬 «Con la macchina.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta con totale convinzione la storia inventata del serpente a scuola di Sherman</li><li><b>la nonna Morena</b> — ascolta, fa domande («hai fatto superman questa mattina?») e segue il racconto</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-03.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-04" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Al lupo, al lupo! — 26 di giugno dell&#x27;85</h3>
+        <span class="dur">2:53</span>
+      </div>
+      <p class="summary">La storia si trasforma in «al lupo, al lupo!»: Navid ammette lo scherzo — «prima ti ho fatto uno scherzo, per davvero» — e la nonna chiude con la morale: «così impara a non dire le bugie». Poi lui stesso data il racconto, come un piccolo cronista: «26 di giugno, dell&#x27;85», e ripete la storia del serpente con la 500 che passa davanti alla scuola.</p>
+      <div class="phrases"><span>💬 «Alup, alup, alup.»</span><span>💬 «Così impara a non dire le bugie.»</span><span>💬 «26 di giugno, dell&#x27;85.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — ammette lo scherzo («al lupo, al lupo!») e ridata la storia del serpente</li><li><b>la nonna Morena</b> — chiude con la morale: «così impara a non dire le bugie»</li><li><b>il babbo Faramarz</b> — annuncia la data di registrazione («26 di giugno, dell&#x27;85»)</li></ul></div>
+      <div class="dates">📅 26 di giugno, dell&#x27;85</div>
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-04.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-05" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Alla Specola: i leoni «invecchiati»</h3>
+        <span class="dur">2:50</span>
+      </div>
+      <p class="summary">Affiora un ricordo vero: la gita scolastica alla Specola, il museo di storia naturale. Navid descrive i leoni impagliati — «erano invecchiati», con la bocca aperta — poi un robot e dei serpenti «lungoso, lungoso, lungoso». La maestra li interroga: «cosa sono i vestimenti?» È il passaggio più autobiografico del nastro, non un&#x27;invenzione.</p>
+      <div class="phrases"><span>💬 «Alla specola abbiamo visto tutte i leoni,»</span><span>💬 «Erano invecchiati.»</span><span>💬 «Lungoso, lungoso, lungoso.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la gita alla Specola: i leoni «invecchiati», il robot, i serpenti «lungoso»</li><li><b>la nonna Morena</b> — fa domande sulla gita e su cosa ha detto la maestra («cosa sono i vestimenti?»)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-05.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-06" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>L&#x27;aereo, la barca e il camioncino</h3>
+        <span class="dur">4:14</span>
+      </div>
+      <p class="summary">Gioco movimentato, in parte poco decifrabile: Navid racconta un «incidente» con un camioncino (la trascrizione qui è molto incerta), poi la nonna lo fa volare — «stai facendo l&#x27;aereo» — e lui chiede una barca. Cade anche un piccolo rimprovero tenero: «sei un pochino maleducato», che lui lascia scivolare via. Alcuni tratti restano davvero oscuri: il nastro fruscia e lui parla a raffica.</p>
+      <div class="phrases"><span>💬 «guarda, babbo... un incidente»</span><span>💬 «stai facendo l&#x27;aereo»</span><span>💬 «Io voglio una barca.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca e racconta l&#x27;«incidente» del camioncino, chiede una barca</li><li><b>la nonna Morena</b> — gioca con lui («stai facendo l&#x27;aereo») e lo rimprovera con dolcezza («sei un pochino maleducato»)</li><li><b>il babbo Faramarz</b> — presente durante il gioco — Navid lo chiama direttamente («guarda, babbo»)</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/reg1a-06.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-07" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Dal dottore e la macchina-barca</h3>
+        <span class="dur">2:30</span>
+      </div>
+      <p class="summary">La nonna gli chiede della mattina: «quando sei stato dai dottori stamattina, cosa ti ha fatto?» — «male», risponde lui, ma i dettagli restano confusi. Allora Navid cambia subito argomento e mostra il suo tesoro: «una macchina barca», un giocattolo che «si trasforma» da macchina in barca. La tecnica narrativa dei quattro anni: se una cosa fa male, si passa al gioco.</p>
+      <div class="phrases"><span>💬 «quando sei stato dai dottori stamattina... male»</span><span>💬 «una macchina barca»</span><span>💬 «la macchina si trasforma»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta (a modo suo) della visita dal dottore e mostra la sua «macchina barca» che si trasforma</li><li><b>la nonna Morena</b> — gli chiede della mattina dai dottori («cosa ti ha fatto?») e lo asseconda</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-07.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-08" data-people="navid|la nonna morena|il nonno">
+      <div class="story-head">
+        <h3>Il nonno si opera e i pescatori</h3>
+        <span class="dur">1:35</span>
+      </div>
+      <p class="summary">«Il nonno si fa l&#x27;operazione»: la notizia arriva detta con naturalezza, come la dicono i bambini. Poi il discorso scivola verso i pescatori e i pesci presi vivi — «era un po&#x27; sci spada», un pesce spada. In mezzo, un racconto pasticciato di un coltellino con cui si sarebbe tagliato la punta di un dito: i dettagli sono incerti, ma il tono è quello di chi vuole fare il grande.</p>
+      <div class="phrases"><span>💬 «ma che si fa il nonno?»</span><span>💬 «si fa l&#x27;operazione il nonno»</span><span>💬 «l&#x27;hanno presi vivi»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — parla dell&#x27;operazione del nonno, dei pescatori, del pesce spada e del coltellino</li><li><b>la nonna Morena</b> — ascolta e risponde alle sue domande («la conta, dai» le chiede lui)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-08.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-09" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>L&#x27;acqua in faccia e la bambina</h3>
+        <span class="dur">2:33</span>
+      </div>
+      <p class="summary">Un ricordo di mare: «l&#x27;acqua mi è rivolta... prendevo l&#x27;acqua nel viso e non potevo vedere sott&#x27;acqua». C&#x27;è una «donna vecchia» in costume e poi, con la schiettezza perfetta dei quattro anni, «una bambina senza mutandine» — che la nonna devia con dolcezza: «una bambina bella». Intanto lui chiede alla nonna di raccontare ancora del pesce spada: «la conta, dai».</p>
+      <div class="phrases"><span>💬 «l&#x27;acqua mi è rivolta»</span><span>💬 «prendevo l&#x27;acqua nel viso»</span><span>💬 «una bambina senza mutandine»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta il ricordo del mare: l&#x27;acqua in faccia, la donna vecchia, la bambina</li><li><b>la nonna Morena</b> — lo ascolta e devia con dolcezza i passaggi imbarazzanti («una bambina bella»)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-09.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-reg1a-10" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Le formicole e il pesce spada liberato</h3>
+        <span class="dur">2:28</span>
+      </div>
+      <p class="summary">Il nastro si chiude in dolcezza, su due fili. Prima le formiche: Navid vuole un filo «per le formigole» e si chiede se dargli da mangiare. Poi tornano i pescatori per il finale buono: la murena (la «morena» dei pescatori — il pesce, non la nonna!) viene ributtata in acqua, e il pesce spada viene staccato dall&#x27;amo e liberato: «l&#x27;ha buttata nel mare». Un finale gentile, come piace a lui.</p>
+      <div class="phrases"><span>💬 «c&#x27;è un filo per le formigole»</span><span>💬 «vi do da mangiare»</span><span>💬 «L&#x27;ha staccato dall&#x27;amo e l&#x27;ha buttata nel mare.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — parla delle formiche («formigole») e chiede di raccontare dei pescatori</li><li><b>la nonna Morena</b> — racconta il finale buono: il pesce spada staccato dall&#x27;amo e liberato in mare</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/reg1a-10.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article></div>
+    </section>
+
+    <section class="tape" id="tape-registrazione-3-cassette">
+      <div class="tape-head">
+        <div>
+          <h2>Il grande nastro di famiglia</h2>
+          <p class="tape-meta">1984–1985 · 2h 47min · 14 storie</p>
+        </div>
+      </div>
+      <p class="tape-desc">La registrazione più lunga: bagnetto, buonanotte, la Specola, la pesca del pesce spada — e il serpente che torna più volte.</p>
+      <div class="cards">
+    <article class="card story" id="story-registrazione-3-cassette-01" data-people="navid">
+      <div class="story-head">
+        <h3>«Gonga! Bella, bella!»</h3>
+        <span class="dur">5:03</span>
+      </div>
+      <p class="summary">Navid gioca con la voce, come fanno i bambini di quattro anni: inventa parole, le ripete, ride da solo. «Gunga, Gunga», «Gonga!», «Uff, bella! Bella!» — è pura allegria, con qualcuno della famiglia che ogni tanto gli fa eco. Un momento di gioco vocale tipico dell&#x27;età, dolcissimo da riascoltare.</p>
+      <div class="phrases"><span>💬 «Gunga, Gunga, Gunga...»</span><span>💬 «Gonga! Gonga! Gonga!»</span><span>💬 «Uff, bella! Bella! Bella!»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca con la voce: inventa parole (&#x27;Gunga&#x27;, &#x27;Gonga&#x27;), le ripete e ride da solo</li><li><b>sconosciuto</b> — familiare che ogni tanto gli fa eco (&#x27;Non è male&#x27;)</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-01.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-02" data-people="navid|la mamma nara|il babbo faramarz">
+      <div class="story-head">
+        <h3>«Papo!» Il gelato e l&#x27;antepiccino</h3>
+        <span class="dur">5:10</span>
+      </div>
+      <p class="summary">Navid chiama «Papo! Papo!» e gioca con la mamma: si parla di gelato, di un «antepiccino» misterioso e ci si scambia bacini. La voce adulta lo rassicura con un tenero «Sì, bambino» ripetuto più volte. Una scenetta domestica piena di coccole, anche se molte parole restano difficili da decifrare.</p>
+      <div class="phrases"><span>💬 «Papo! Papo, stiamo!»</span><span>💬 «Com&#x27;è il gelato?»</span><span>💬 «Ti damo l&#x27;antepiccino?»</span><span>💬 «Sì, bambino. Sì, bambino.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — chiama &#x27;Papo!&#x27;, gioca e parla del gelato e dell&#x27;antepiccino</li><li><b>sconosciuto</b> — voce femminile tenera che lo rassicura (&#x27;Sì, bambino&#x27;) e gli offre da mangiare</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-02.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-03" data-people="navid">
+      <div class="story-head">
+        <h3>«Fa la nanna» Spengo la luce</h3>
+        <span class="dur">4:56</span>
+      </div>
+      <p class="summary">È l&#x27;ora di dormire: «fa la nanna», si spenge la luce, si parla piano. Navid borbotta, canticchia «la la la» e a un certo punto chiama Lina per andare all&#x27;aeroporto — la fantasia non si spegne nemmeno prima di dormire. La registrazione è molto disturbata, ma l&#x27;atmosfera della buonanotte si sente tutta.</p>
+      <div class="phrases"><span>💬 «fa la nanna»</span><span>💬 «Spengo la luce? Sì.»</span><span>💬 «Senti, vieni all&#x27;aeroporto Lina!»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — borbotta e canticchia prima di dormire (&#x27;fa la nanna&#x27;, &#x27;la la la&#x27;); chiama Lina per l&#x27;aeroporto</li><li><b>sconosciuto</b> — voce femminile che prepara la buonanotte (&#x27;Spengo la luce?&#x27;)</li></ul></div>
+      
+      <div class="note quiet">🔈 Questa storia è stata registrata pianissimo: alza il volume del telefono per ascoltarla bene.</div><div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-03.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-04" data-people="navid|il babbo faramarz">
+      <div class="story-head">
+        <h3>Il 26 di marzo dell&#x27;84</h3>
+        <span class="dur">4:58</span>
+      </div>
+      <p class="summary">Navid gioca con il babbo: macchinine, una «tavola», e a un certo punto qualcuno detta la data — «26 di marzo, dell&#x27;84» — come per marcare il nastro. È uno dei rari momenti datati con certezza di questa cassetta. Tra un «Papà, dai, dai!» e l&#x27;altro si sente tutta la complicità del gioco.</p>
+      <div class="phrases"><span>💬 «Papà, dai, dai, dai!»</span><span>💬 «26 di marzo, dell&#x27;84»</span><span>💬 «io ho quella macchina»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca con le macchinine e chiama il papà (&#x27;Papà, dai, dai, dai!&#x27;)</li><li><b>il babbo Faramarz</b> — gioca con Navid e detta la data di registrazione (&#x27;26 di marzo, dell&#x27;84&#x27;)</li></ul></div>
+      <div class="dates">📅 26 di marzo, dell&#x27;84</div>
+      <div class="note quiet">🔈 Questa storia è stata registrata pianissimo: alza il volume del telefono per ascoltarla bene.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-04.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-05" data-people="navid|il babbo faramarz">
+      <div class="story-head">
+        <h3>«Come si fa, Navid?»</h3>
+        <span class="dur">4:40</span>
+      </div>
+      <p class="summary">Un lungo botta e risposta giocoso: l&#x27;adulto chiede «Come si fa, Navid?» e lui risponde «No, no», tra finte sfide e un «coltello» che non fa paura a nessuno. Si capisce che stanno giocando con il registratore stesso — «È finito?» — e Navid si diverte un mondo a fare il difficile.</p>
+      <div class="phrases"><span>💬 «Come si fa Navid? No, no.»</span><span>💬 «Coltello, tu stai.»</span><span>💬 «È finito? Sì, finito, finito.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — risponde &#x27;No, no&#x27; alle domande; gioca con il registratore (&#x27;È finito?&#x27;) e con il coltello finto</li><li><b>il babbo Faramarz</b> — guida il gioco con domande e finte sfide (&#x27;Come si fa, Navid?&#x27;)</li></ul></div>
+      
+      <div class="note quiet">🔈 Questa storia è stata registrata pianissimo: alza il volume del telefono per ascoltarla bene.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-05.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-06" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>«La mamma ti vuole bene?» «Tanto»</h3>
+        <span class="dur">5:06</span>
+      </div>
+      <p class="summary">Uno dei momenti più teneri del nastro: la mamma chiede «La mamma ti vuole bene?» e Navid risponde «Tanto. E al babbo? Tanto». Poi si parla del compleanno della nonna Morena — «13 febbraio 85» — e dei fusili giocattolo, uno perso e uno nuovo. Affetto e festa di famiglia in cinque minuti.</p>
+      <div class="phrases"><span>💬 «La mamma ti vuole bene? Tanto. E al babbo? Tanto.»</span><span>💬 «13 febbraio 85»</span><span>💬 «Ma di che era il compleanno? Della Morena.»</span><span>💬 «c&#x27;era un altro fusile»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — risponde &#x27;Tanto&#x27; alle domande sull&#x27;affetto di mamma e babbo; parla dei fusili giocattolo</li><li><b>sconosciuto</b> — voce femminile che chiede a Navid se la mamma e il babbo gli vogliono bene; si parla del compleanno della Morena</li></ul></div>
+      <div class="dates">📅 13 febbraio 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-06.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-07" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>«Pronto, puja!» Superman e Matteo</h3>
+        <span class="dur">4:42</span>
+      </div>
+      <p class="summary">Navid gioca al telefono: «C&#x27;è il numero setto», «Pronto. Puja.», «Mani». Poi parte un buffo jingle inventato — «lo sciampo della natura dolce» — e si chiacchiera di Pinocchio, di Matteo e di Superman, che a quanto pare Navid ha «fatto» quella mattina. Pura immaginazione da bambino di quattro anni.</p>
+      <div class="phrases"><span>💬 «Pronto. Puja. Pronto.»</span><span>💬 «lo sciampo della natura dolce»</span><span>💬 «Chi vuole fare il pinocchio?»</span><span>💬 «te hai fatto Superman questa mattina»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca al telefono (&#x27;Pronto. Puja.&#x27;), inventa il jingle dello sciampo, parla di Superman e Matteo</li><li><b>sconosciuto</b> — voce femminile che gioca con lui e lo fa raccontare</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-07.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-08" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>Il serpente a scuola di Sherman</h3>
+        <span class="dur">5:54</span>
+      </div>
+      <p class="summary">La storia che Navid racconta e rielabora più volte: «Una volta s&#x27;erpente a scuola di Sherman» — un serpente investito da una 500, che «l&#x27;arco l&#x27;ha ammazzato». La mamma lo asseconda e lo fa raccontare, e alla fine Navid stesso detta la data: «26 di giugno del 1985». Il racconto infantile per eccellenza, tra realtà e fantasia.</p>
+      <div class="phrases"><span>💬 «Una volta s&#x27;erpente a scuola di Sherman»</span><span>💬 «passava una macchina, una 500»</span><span>💬 «l&#x27;arco l&#x27;ha ammazzato»</span><span>💬 «26 di giugno del 1985»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta e rielabora più volte la storia del serpente a scuola di Sherman</li><li><b>la mamma Nara</b> — lo asseconda e lo fa raccontare (&#x27;raccontami&#x27;); Navid la chiama &#x27;Mamma&#x27;</li></ul></div>
+      <div class="dates">📅 26 di giugno del 1985</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-08.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-09" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>La Specola: i leoni con la bocca aperta</h3>
+        <span class="dur">3:06</span>
+      </div>
+      <p class="summary">Navid racconta la visita alla Specola: «abbiamo visto tutti i leoni» — ma non erano veri, «erano impagliati», e stavano «con la bocca aperta». Poi c&#x27;era «un serpente, lungoso, lungoso, lungoso». Il ricordo del museo di storia naturale, rivissuto con gli occhi sgranati di un bambino.</p>
+      <div class="phrases"><span>💬 «Alla specola abbiamo visto tutti i leoni»</span><span>💬 «con la bocca aperta, erano impagliati»</span><span>💬 «un serpente, lungoso, lungoso, lungoso»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la visita alla Specola: i leoni impagliati &#x27;con la bocca aperta&#x27; e il serpente &#x27;lungoso&#x27;</li><li><b>la nonna Morena</b> — Navid le racconta la visita (&#x27;Morena, lo sai che...&#x27;); lei fa domande (&#x27;il maestro cosa vi ha detto?&#x27;)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-09.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-10" data-people="navid|il babbo faramarz">
+      <div class="story-head">
+        <h3>Il camioncino e la macchina-barca</h3>
+        <span class="dur">4:01</span>
+      </div>
+      <p class="summary">«Guarda, babbo»: Navid racconta un incidente e un camioncino che partiva per un viaggio in barca, poi gioca con una macchinina magica che «si trasforma» in barca. Molto è confuso e difficile da seguire, ma l&#x27;entusiasmo del racconto — e del gioco con il babbo — arriva forte e chiaro.</p>
+      <div class="phrases"><span>💬 «Guarda, babbo»</span><span>💬 «il camioncino che lui doveva andare»</span><span>💬 «la macchina si trasforma»</span><span>💬 «una macchina barca»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta l&#x27;incidente del camioncino e gioca con la macchinina che &#x27;si trasforma&#x27; in barca</li><li><b>il babbo Faramarz</b> — ascolta e gioca con Navid, che lo chiama &#x27;babbo&#x27; (&#x27;Guarda, babbo&#x27;)</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-10.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-11" data-people="navid|la mamma nara|la nonna morena">
+      <div class="story-head">
+        <h3>Il pesce spada ributtato in mare</h3>
+        <span class="dur">5:59</span>
+      </div>
+      <p class="summary">Le storie di pesca, raccontate con grande enfasi: «era un pesce spada», pescato «per un pelo» e poi — colpo di scena — «l&#x27;hanno buttata nell&#x27;acqua», ributtato in mare. Navid deve raccontare tutto alla mamma e alla nonna Morena («racconta la Morena di quanto è pescato»), tra il filo per le formigole e l&#x27;acqua che gli arrivava «fino a qua».</p>
+      <div class="phrases"><span>💬 «era un pesce spada»</span><span>💬 «racconta la nara / racconta la Morena di quanto è pescato»</span><span>💬 «l&#x27;hanno buttata nell&#x27;acqua»</span><span>💬 «quel pesce l&#x27;ha staccato dall&#x27;amo e l&#x27;ha buttata nel mare»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — protagonista: racconta con enfasi le storie di pesca, il pesce spada pescato &#x27;per un pelo&#x27; e ributtato in mare</li><li><b>sconosciuto</b> — terza voce adulta che sprona Navid a raccontare alle donne (&#x27;Navid, racconta alla mamma quanti pesci spada c&#x27;erano&#x27;)</li><li><b>la mamma Nara</b> — ascolta i racconti; viene chiamata per nome (&#x27;Nara, ascolta&#x27;) e come &#x27;mamma&#x27;</li><li><b>la nonna Morena</b> — presente all&#x27;ascolto; viene interpellata (&#x27;Morena, lo sai che...&#x27;, &#x27;racconta alla Morena&#x27;)</li></ul></div>
+      <div class="dates">📅 4 settembre 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-11.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-12" data-people="navid|la mamma nara|la nonna morena">
+      <div class="story-head">
+        <h3>«La nonna è bugiarda!»</h3>
+        <span class="dur">5:38</span>
+      </div>
+      <p class="summary">Navid ammette allegramente di aver rotto la macchinina — «l&#x27;ho rotta apposta!» — poi si gioca alle guancialate, si mangia («buon appetito») e si ride del «chi-chi-ri-chi». Il momento più buffo: parlando della nonna Morena, Navid sentenzia «ma la nonna è bugiarda», tutto in gioco e risate. Famiglia felice, caos felice.</p>
+      <div class="phrases"><span>💬 «Tu l&#x27;hai fatta apposta? Sì.»</span><span>💬 «Buon appetito. Adesso devi mangiare.»</span><span>💬 «C&#x27;è il chi-chi-ri-chi»</span><span>💬 «Ma la nonna è bugiarda»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — ammette di aver rotto la macchinina &#x27;apposta&#x27;, gioca alle guancialate, sentenzia &#x27;la nonna è bugiarda&#x27;</li><li><b>la mamma Nara</b> — lo interroga sul danno, lo fa mangiare (&#x27;Buon appetito&#x27;) e gioca; parla della nonna in terza persona</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-12.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-13" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>La favola di Pinocchio</h3>
+        <span class="dur">4:49</span>
+      </div>
+      <p class="summary">«Chi ti racconta di Pinocchio?» — e Navid ci prova, a modo suo: «il pinacchio» diventa «un cattivo buio» con «il naso lungo perché ha detto le bugie». In mezzo spunta Geppetto che «faceva i palignami di mestiere» e la data «10 gennaio 85». Una favola raccontata insieme, tra interruzioni e invenzioni.</p>
+      <div class="phrases"><span>💬 «Chi ti racconta di Pinocchio?»</span><span>💬 «il naso lungo perché ha detto le bugie»</span><span>💬 «faceva i palignami di mestiere»</span><span>💬 «10 gennaio 85»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la favola di Pinocchio a modo suo (&#x27;il naso lungo perché ha detto le bugie&#x27;)</li><li><b>sconosciuto</b> — adulto che lo fa raccontare (&#x27;Chi ti racconta di Pinocchio?&#x27;) e lo sprona</li><li><b>il babbo Faramarz</b> — annuncia la data di registrazione (&#x27;I 10 di gennaio dell&#x27;85 oggi&#x27;)</li></ul></div>
+      <div class="dates">📅 I 10 di gennaio dell&#x27;85 oggi, 10 gennaio 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-13.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-3-cassette-14" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>«Mamma, ti voglio tanto bene»</h3>
+        <span class="dur">3:56</span>
+      </div>
+      <p class="summary">Il nastro si chiude in dolcezza: «Mamma, ti voglio tanto bene», dice Navid, e la mamma gli chiede di ripeterlo. Poi si canta — «Clafale!», «si canta acrelù» — e la cassetta finisce come era cominciata: con la voce di un bambino felice. Il saluto perfetto per la nonna e per te, mamma.</p>
+      <div class="phrases"><span>💬 «Mamma, ti voglio tanto bene»</span><span>💬 «Clafale! Clafale!»</span><span>💬 «Ecco, si canta acrelù!»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — registra il messaggio &#x27;Mamma, ti voglio tanto bene&#x27; e canta (&#x27;Clafale!&#x27;, &#x27;si canta acrelù&#x27;)</li><li><b>sconosciuto</b> — adulto che gli fa registrare il messaggio per la mamma (&#x27;alla tua mamma&#x27;) e canta con lui</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-3-cassette-14.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article></div>
+    </section>
+
+    <section class="tape" id="tape-registrazione-dopo-partenza-navid-2">
+      <div class="tape-head">
+        <div>
+          <h2>Dopo la partenza</h2>
+          <p class="tape-meta">1985 · ~32 min · 10 storie</p>
+        </div>
+      </div>
+      <p class="tape-desc">Un estratto intenso: il compleanno della nonna Morena, il serpente, gli scherzi con la nannara.</p>
+      <div class="cards">
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-01" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Il bagnetto della nannara</h3>
+        <span class="dur">1:35</span>
+      </div>
+      <p class="summary">Il piccolo Navid racconta del bagnetto: chi glielo faceva? La nannara. Tra una risata e l&#x27;altra si parla del sapone, delle manine da lavare e del «bravo bravo bravo» che gli dicevano. Un inizio tenerissimo, tutto in famiglia.</p>
+      <div class="phrases"><span>💬 «chi te lo lavava? La nannara»</span><span>💬 «vado a farlo, vado a farlo»</span><span>💬 «mi dici bravo bravo bravo»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta del bagnetto e risponde alle domande dell&#x27;adulta</li><li><b>la mamma Nara</b> — fa domande a Navid sul bagnetto e su quanto bene vuole alla mamma (stessa conversazione che prosegue nel cap. 2)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-01.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-02" data-people="navid|la mamma nara|il babbo faramarz|la nonna morena">
+      <div class="story-head">
+        <h3>Quanto bene vuoi alla mamma?</h3>
+        <span class="dur">2:30</span>
+      </div>
+      <p class="summary">La mamma chiede a Navid quanto bene le vuole, e lui risponde «tanto»: vuole bene alla mamma, al babbo, a tutti uguali. Poi il gioco si sposta sulla pallina e sui fusili giocattolo, con un accenno al febbraio &#x27;85 e alla Morena, «che è una birba».</p>
+      <div class="phrases"><span>💬 «quanto bene le vuoi? tanto»</span><span>💬 «sono mia babbe e la mia mamma»</span><span>💬 «anche della Morena, ma la Morena è una birba»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — risponde «tanto» alla domanda su quanto bene vuole; parla della pallina e dei fucili giocattolo</li><li><b>la mamma Nara</b> — chiede a Navid quanto bene le vuole; parla della Morena in terza persona e manda Navid in camera da lei</li></ul></div>
+      <div class="dates">📅 in febbraio 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-02.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-03" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>Puja, parla!</h3>
+        <span class="dur">2:13</span>
+      </div>
+      <p class="summary">Momenti di gioco puro: Navid gioca con i numeri («numero set»), mostra le sue cose e dice che gliele ha comprate «la Nara». Poi arrivano le filastrocche inventate — «puja, parla!» — e lo shampoo «della natura dolce». Tante parole sono storpiature da bambino piccolo: la trascrizione qui è incerta.</p>
+      <div class="phrases"><span>💬 «numero set, tu c&#x27;hai?»</span><span>💬 «che te l&#x27;ha compratto? la nara»</span><span>💬 «puja, parla!»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca con i numeri, mostra le sue cose e canta filastrocche inventate («puja, parla!»)</li><li><b>sconosciuto</b> — voce femminile adulta che fa domande a Navid e gioca con lui (non distinguibile con certezza tra mamma e nonna)</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-03.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-04" data-people="navid">
+      <div class="story-head">
+        <h3>Pinocchio e il canto</h3>
+        <span class="dur">2:28</span>
+      </div>
+      <p class="summary">Navid vuole fare Pinocchio e lo invitano a cantare, ma lui fa il timido: «canta da solo». Poi racconta di un amichetto, Matteo, e di una prova di forza vinta — «io ho buttato più forte e ce l&#x27;ho fatta» — concludendo fiero: «allora tu sei proprio forte».</p>
+      <div class="phrases"><span>💬 «voleva pinacchio»</span><span>💬 «canta da solo»</span><span>💬 «io ho buttato più forte e ce l&#x27;ho fatta»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta dell&#x27;amichetto Matteo e della prova di forza; fa il timido quando lo invitano a cantare</li><li><b>sconosciuto</b> — adulto/i che lo incoraggiano a cantare Pinocchio e lo fanno raccontare (identità non determinabile)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-04.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-05" data-people="navid">
+      <div class="story-head">
+        <h3>La storia del serpente</h3>
+        <span class="dur">5:22</span>
+      </div>
+      <p class="summary">Il racconto più lungo del nastro: «c&#x27;era una volta il serpente» a scuola. Navid la racconta a modo suo, con la macchina che passa, il serpente che «era finito per davvero» e una morale tutta sua — il lupo che mangia le «veloce» per insegnare a non dire le bugie. Un piccolo capolavoro di fantasia da bambino di quattro anni.</p>
+      <div class="phrases"><span>💬 «c&#x27;era una volta il serpente»</span><span>💬 «era finito per davvero»</span><span>💬 «così impara a non dire le bugie»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta a modo suo la storia del serpente a scuola</li><li><b>sconosciuto</b> — voce adulta che ascolta il racconto e fa brevi domande (identità non determinabile)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-05.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-06" data-people="navid">
+      <div class="story-head">
+        <h3>26 giugno 1985 e la Specola</h3>
+        <span class="dur">3:02</span>
+      </div>
+      <p class="summary">Navid mette la data al racconto: «26 di giugno del 1985, il serpente a scuola». Poi il ricordo si sposta alla visita alla Specola di Firenze, con i leoni «invecchiati» (impagliati) dalla bocca aperta che tanto lo avevano colpito. Una data precisa e un museo vero, nella voce di un bambino.</p>
+      <div class="phrases"><span>💬 «26 di giugno del 1985»</span><span>💬 «alla Specola abbiamo visto tutte le leoni»</span><span>💬 «erano invecchiati, con bocca aperta»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la storia del serpente e la visita alla Specola con i leoni «invecchiati»</li><li><b>sconosciuto</b> — voce adulta che fa domande a Navid sui leoni e sulla maestra (identità non determinabile)</li><li><b>il babbo Faramarz</b> — legge la data di registrazione «26 di giugno del 1985»</li></ul></div>
+      <div class="dates">📅 26 di giugno del 1985</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-06.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-07" data-people="navid|il babbo faramarz">
+      <div class="story-head">
+        <h3>Le colonie e il viaggio a Roma</h3>
+        <span class="dur">3:45</span>
+      </div>
+      <p class="summary">Navid ricorda le colonie, dove si erano vestiti «da cotto», e poi parte per un viaggio immaginario a Roma: c&#x27;è un incidente, un camioncino e una barca, e il babbo che guarda con lui. Il racconto è molto frammentario e la trascrizione incerta, ma l&#x27;entusiasmo si sente tutto.</p>
+      <div class="phrases"><span>💬 «alle colonie ci siamo vestiti da cotto»</span><span>💬 «guarda, babbo»</span><span>💬 «eccolo qui, uoco»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta le colonie e il viaggio immaginario a Roma (incidente, camioncino, barca)</li><li><b>il babbo Faramarz</b> — presente e interpellato da Navid come «babbo»; ascolta e risponde brevemente</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-07.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-08" data-people="navid">
+      <div class="story-head">
+        <h3>L&#x27;aereo, la barca e il dottore</h3>
+        <span class="dur">4:08</span>
+      </div>
+      <p class="summary">Si gioca con il cibo, si costruisce un aereo («vi faccio l&#x27;aereo»), ma Navid preferisce una barca. Poi si parla dei dottori visti la mattina — «il dutù, il dutù» — e di una macchina che si trasforma. Tanti pezzetti di gioco libero, con la trascrizione spesso incerta per via del linguaggio inventato.</p>
+      <div class="phrases"><span>💬 «questo è il paolo»</span><span>💬 «io voglio una barca»</span><span>💬 «il dutù, il dutù»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca con il cibo, l&#x27;aereo e la barca; racconta della visita dal dottore («il dutù»)</li><li><b>sconosciuto</b> — voce adulta che gioca con lui e gli chiede della visita dal dottore (identità non determinabile)</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-08.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-09" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>Quattro settembre &#x27;85</h3>
+        <span class="dur">2:06</span>
+      </div>
+      <p class="summary">Un altro momento datato: «4 settembre 85». Navid gioca al dottore — «si fa l&#x27;operazione di nondo» — e poi esplode in un tifo da stadio: «Maradona, Maradona, Maradona!». Subito dopo comincia il grande tema della seconda metà del nastro: il pesce spada, «l&#x27;hanno presi vivi».</p>
+      <div class="phrases"><span>💬 «4 settembre 85»</span><span>💬 «si fa l&#x27;operazione di nondo»</span><span>💬 «maradona, maradona, maradona»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca al dottore («l&#x27;operazione di nondo») e tifa «Maradona, Maradona»</li><li><b>sconosciuto</b> — voce adulta che organizza il gioco e chiama qualcuno di nome «Pia» (identità non determinabile)</li><li><b>il babbo Faramarz</b> — legge la data di registrazione «4 settembre 85»</li></ul></div>
+      <div class="dates">📅 4 settembre 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-09.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-registrazione-dopo-partenza-navid-2-10" data-people="navid|la mamma nara|la nonna morena">
+      <div class="story-head">
+        <h3>Morena e i pescatori</h3>
+        <span class="dur">4:35</span>
+      </div>
+      <p class="summary">Il gran finale è tutto dedicato alla pesca: Navid vuole raccontare alla mamma e alla Nara del pesce spada, dell&#x27;acqua che gli arrivava fin qua, dei pescatori. Chiama la Morena perché racconti anche lei — «la Morena non lo sa» — e spiega il filo a cui tenersi «perché se non cascavano». Si chiude così, con il mare e la famiglia, questo nastro del 1985.</p>
+      <div class="phrases"><span>💬 «d&#x27;acconta la nara, che ti pesci spada c&#x27;era»</span><span>💬 «l&#x27;hanno presi vivi, era un pesce spada»</span><span>💬 «perché se non cascavano»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta del pesce spada, dei pescatori e dell&#x27;acqua che gli arrivava «fino a qua»</li><li><b>la nonna Morena</b> — dialoga con Navid e gli fa domande sui pescatori; Navid la chiama direttamente «Morena»</li><li><b>la mamma Nara</b> — presente; Navid la chiama «mamma» e vuole raccontarle del pesce spada</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-10.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article></div>
+    </section>
+
+    <section class="tape" id="tape-cassetta-navid-dopo-partenza-1">
+      <div class="tape-head">
+        <div>
+          <h2>Buonanotte e He-Man</h2>
+          <p class="tape-meta">1984–1986 · 1h 28min · 14 storie</p>
+        </div>
+      </div>
+      <p class="tape-desc">Cappuccetto Rosso prima di dormire, la sigla di He-Man recitata a memoria, le moto, l&#x27;amico Lorenzo… e un Navid più grande che fa il DJ.</p>
+      <div class="cards">
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-01" data-people="navid">
+      <div class="story-head">
+        <h3>Giochi e la bella Nora</h3>
+        <span class="dur">3:49</span>
+      </div>
+      <p class="summary">Dopo un lungo tratto di nastro vuoto, la cassetta riprende con Navid impegnato in giochi di parole e piccole scenette con la voce adulta. Si sente nominare una «bella Nora» e il momento si chiude con un tenero «un bescio», un bacino. È un frammento vivace ma molto disturbato dal fruscio.</p>
+      <div class="phrases"><span>💬 «la bella nora!»</span><span>💬 «va bene? va bene?»</span><span>💬 «un bescio»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — protagonista: giochi di parole (&#x27;va bene? va bene?&#x27;), nomina &#x27;la bella Nora&#x27;, chiude con &#x27;un bescio&#x27;</li><li><b>sconosciuto</b> — voce adulta che fa domande e segue i giochi di parole; genere non identificabile dal testo</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-01.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-02" data-people="navid">
+      <div class="story-head">
+        <h3>He-Man, i fantasmi e le moto</h3>
+        <span class="dur">5:18</span>
+      </div>
+      <p class="summary">Navid prima spiega come funzionano i fantasmi — «gambe dure» e «bollicine alla bocca» — e poi recita a memoria, tutto d&#x27;un fiato, la sigla di He-Man in italiano: è il momento più nitido del nastro. Seguono i suoi discorsi da piccolo esperto sulle moto («se non c&#x27;è un cavaletto speciale, cascano»), la data detta ad alta voce «23 gennaio 86» e il racconto di ponti, tunnel e di un lavoretto di carta.</p>
+      <div class="phrases"><span>💬 «io sono l&#x27;ana, principe di eterna»</span><span>💬 «he-man, l&#x27;uomo più forte dell&#x27;universo»</span><span>💬 «23 gennaio 86»</span><span>💬 «le moto che non c&#x27;è un cavaletto speciale, cascano»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — spiega come funzionano i fantasmi, recita a memoria la sigla di He-Man, discetta da piccolo esperto sulle moto e dice ad alta voce &#x27;23 gennaio 86&#x27;</li><li><b>sconosciuto</b> — voce adulta con brevi domande sul film visto a scuola (&#x27;la scuola dei sani?&#x27;); genere non identificabile dal testo</li></ul></div>
+      <div class="dates">📅 23 gennaio 86</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-02.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-03" data-people="navid">
+      <div class="story-head">
+        <h3>Le canzoncine inventate</h3>
+        <span class="dur">3:20</span>
+      </div>
+      <p class="summary">Un intermezzo di canti inventati: Navid canticchia filastrocche senza senso apparente — «de la petto una cosa», la serenata con «è viva, è viva!» — alternate a lunghi «e poi, e poi…» che sono in parte artefatti della trascrizione su audio confuso. Si sente tutta la sua voglia di cantare, anche se le parole restano misteriose.</p>
+      <div class="phrases"><span>💬 «de la petto una cosa»</span><span>💬 «è viva! è viva! è viva!»</span><span>💬 «c&#x27;è la cricchonetta»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — canta filastrocche inventate (&#x27;de la petto una cosa&#x27;, la serenata con &#x27;è viva! è viva!&#x27;)</li><li><b>sconosciuto</b> — voce adulta che lo incoraggia a cantare (&#x27;ah, vieni, canta!&#x27;); genere non identificabile dal testo</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-03.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-04" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Cappuccetto Rosso (prima volta)</h3>
+        <span class="dur">3:21</span>
+      </div>
+      <p class="summary">La prima versione di Cappuccetto Rosso raccontata sul nastro: Navid, guidato dalla voce adulta, racconta la bambina che va dalla nonnina con la merenda e il lupo che bussa «pom pom pom». La nonnina qui è la sua nonna Morena, e il racconto si chiude con una buffa canzoncina in inglese biascicata.</p>
+      <div class="phrases"><span>💬 «questo capucchetto rosso andava»</span><span>💬 «pom pom pom pom pom»</span><span>💬 «dalla merenda»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la prima versione di Cappuccetto Rosso, guidato dalle domande dell&#x27;adulto</li><li><b>sconosciuto</b> — voce adulta che guida la fiaba con domande (&#x27;cosa c&#x27;era come merenda?&#x27;); impossibile distinguere dal testo se sia la mamma o la nonna</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-04.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-05" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>Buonanotte — 17 settembre 1984</h3>
+        <span class="dur">4:42</span>
+      </div>
+      <p class="summary">Il momento più datato del nastro: una voce adulta annuncia «Registrato il 17 settembre 1984, ore 10 e 20 — buonanotte, perché ora si va a letto», e invita Navid vicino al registratore a raccontare. Lui ricomincia Cappuccetto Rosso, questa volta con il «bucchino rosso», la luce accesa per guardare dentro e la nonna che aspetta. Una vera registrazione della buonanotte, tenerissima.</p>
+      <div class="phrases"><span>💬 «registrato il 17 settembre 1984»</span><span>💬 «ore 10 e 20, buonanotte»</span><span>💬 «il bucchino rosso»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta Cappuccetto Rosso (&#x27;il bucchino rosso&#x27;, la luce accesa) e canticchia vicino al registratore</li><li><b>il babbo Faramarz</b> — annuncia &#x27;Registrato il 17 settembre 1984, ore 10 e 20, buonanotte&#x27; e invita Navid a raccontare al registratore</li></ul></div>
+      <div class="dates">📅 17 settembre 1984</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-05.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-06" data-people="navid">
+      <div class="story-head">
+        <h3>Il babbo col motorino, le barche e Sandro</h3>
+        <span class="dur">4:13</span>
+      </div>
+      <p class="summary">Navid racconta a ruota libera: il «papo» che va via col motorino, le barche attaccate che non devono andare via, i gattini, e Sandro che «è andato a fiammo» e va «pianino». In mezzo torna il film visto all&#x27;asilo, «quello di Pusmetto», con la signorina. Un fiume di piccole storie di bambino, anche se la trascrizione è approssimativa.</p>
+      <div class="phrases"><span>💬 «il papo con il motorino»</span><span>💬 «il sandro è andato a fiammo»</span><span>💬 «quello di Pusmetto»</span><span>💬 «i gattini»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta a ruota libera: il papo col motorino, le barche attaccate, i gattini, Sandro e il film dell&#x27;asilo &#x27;di Pusmetto&#x27;</li><li><b>sconosciuto</b> — voce adulta che fa domande e segue i racconti (&#x27;dove andò?&#x27;, &#x27;come quella del sandro?&#x27;); genere non identificabile dal testo</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-06.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-07" data-people="navid|lorenzo|la nonna morena">
+      <div class="story-head">
+        <h3>L&#x27;amico Lorenzo</h3>
+        <span class="dur">5:14</span>
+      </div>
+      <p class="summary">Qui conosciamo Lorenzo: «amico suo Lorenzo», dice la voce adulta, e Navid conferma «è da mio amico». Poi Navid conta ad alta voce — «18, 18… 19, 19…» — gioca, chiama la nonna «morina» e canticchia «Luna tu». È il capitolo più lungo e affollato: amicizia, numeri e canzoncine mescolati come solo i bambini sanno fare.</p>
+      <div class="phrases"><span>💬 «amico suo Lorenzo»</span><span>💬 «è da mio amico»</span><span>💬 «la morina, la morina»</span><span>💬 «18, 18… 19, 19»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — protagonista: parla dell&#x27;amico Lorenzo, conta ad alta voce (&#x27;18, 18… 19, 19…&#x27;), gioca e canta (&#x27;Luna tu&#x27;); chiama la nonna &#x27;morina&#x27;</li><li><b>la nonna Morena</b> — voce adulta femminile che Navid chiama &#x27;morina&#x27;; parla con lui di Lorenzo e segue i giochi</li><li><b>Lorenzo</b> — amico bambino di Navid, nominato dalla voce adulta (&#x27;amico suo Lorenzo&#x27;); presenza vocale non confermabile dal testo</li><li><b>sconosciuto</b> — voce adulta in sottofondo (forse radio o TV) che parla di matematica e derivate</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-07.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-08" data-people="navid">
+      <div class="story-head">
+        <h3>La pistola di faiu e il registratore</h3>
+        <span class="dur">4:21</span>
+      </div>
+      <p class="summary">Giochi di finzione con «babbo nazale» e la pistola di faiu — «e poi ho sparato la pistola di faiu» — mentre la voce adulta lo invita a parlare vicino al registratore: «metti l&#x27;orecchio qui». Navid racconta di un omino dentro una storia che «andava fuori», e il capitolo si chiude con un corale «OUNA OUNA OUNA!». Molto rumoroso, ma pieno di energia.</p>
+      <div class="phrases"><span>💬 «e&#x27; babbo nazale»</span><span>💬 «ho sparato la pistola di faiu»</span><span>💬 «metti l&#x27;orecchio qui»</span><span>💬 «OUNA OUNA OUNA OUNA OUNA!»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — giochi di finzione (&#x27;babbo nazale&#x27;, &#x27;la pistola di faiu&#x27;), racconta l&#x27;omino della storia; chiude con il corale &#x27;OUNA OUNA OUNA!&#x27;</li><li><b>sconosciuto</b> — voce adulta che lo invita a parlare vicino al registratore (&#x27;metti l&#x27;orecchio qui&#x27;, &#x27;Parla Navid&#x27;); genere non identificabile dal testo</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-08.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-09" data-people="navid">
+      <div class="story-head">
+        <h3>Il DJ e «L&#x27;isola che non c&#x27;è»</h3>
+        <span class="dur">5:09</span>
+      </div>
+      <p class="summary">Il nastro cambia registro: un Navid più grande fa il DJ e presenta le sue canzoni preferite come in una trasmissione radiofonica. Poi canta «L&#x27;isola che non c&#x27;è» — «seconda stella a destra, questo è il cammino» — e alla fine ringrazia gli ascoltatori: «grazie per il mio ascoltato, ciao». Il tratto più chiaro e comprensibile di tutta la cassetta.</p>
+      <div class="phrases"><span>💬 «è il mio cantante preferito»</span><span>💬 «forse proprio l&#x27;isola che non c&#x27;è»</span><span>💬 «seconda, stella, destra»</span><span>💬 «grazie per il mio ascoltato, ciao»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — fa il DJ: presenta le sue canzoni preferite come in una trasmissione radiofonica, canta &#x27;L&#x27;isola che non c&#x27;è&#x27; e ringrazia gli ascoltatori (&#x27;grazie per il mio ascoltato, ciao&#x27;)</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-09.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-10" data-people="navid">
+      <div class="story-head">
+        <h3>Serenate, il lupo e la patteria</h3>
+        <span class="dur">4:52</span>
+      </div>
+      <p class="summary">Si torna al piccolo Navid tra canti scatenati — «fui la cessa!», «Filici Navid, dai!» — e la serenata con la cricchonetta. Poi il gioco cambia: arriva il lupo, la «patteria», un serpente che «mi frustrava». Un collage di canzoni e piccole paure da bambino, registrato con tanto fruscio ma tanta allegria.</p>
+      <div class="phrases"><span>💬 «fui la cessa!»</span><span>💬 «filici Navid, dai!»</span><span>💬 «è il lupo. patteria!»</span><span>💬 «la cricchonetta»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — canta scatenato (&#x27;fui la cessa!&#x27;, &#x27;Filici Navid, dai!&#x27;), la serenata con la cricchonetta; racconta il lupo, la &#x27;patteria&#x27; e il serpente</li><li><b>sconosciuto</b> — voce adulta che segue il racconto con domande (&#x27;E poi?&#x27;, &#x27;Cosa fai?&#x27;); genere non identificabile dal testo</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-10.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-11" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Cappuccetto Rosso e la merenda della nonnina</h3>
+        <span class="dur">3:18</span>
+      </div>
+      <p class="summary">La fiaba ricomincia da capo in una terza versione: la «nonnina è la malata», ha «la febbre», e Cappuccetto — qui «capucentrosta» — le porta la merenda: biscotti, latte, marmellata e pane, «buono, buono, buono». Il lupo bussa «pom pom pom» e Navid conta i colpi. La versione più affettuosa della fiaba, tutta dedicata alla nonnina.</p>
+      <div class="phrases"><span>💬 «la nonnina è la malata»</span><span>💬 «la febbre»</span><span>💬 «pom, pom, pom, pom, pom, pom»</span><span>💬 «buono, buono, buono»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la terza versione della fiaba: la nonnina malata con la febbre, la merenda (biscotti, latte, marmellata e pane), il lupo che bussa &#x27;pom pom&#x27;</li><li><b>sconosciuto</b> — voce adulta che guida il racconto con domande; impossibile distinguere dal testo se sia la mamma o la nonna</li><li><b>il babbo Faramarz</b> — in chiusura del capitolo annuncia &#x27;Registrato il 17 settembre 1984&#x27;</li></ul></div>
+      <div class="dates">📅 17 settembre 1984</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-11.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-12" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>La buonanotte e il cacciatore col fucile</h3>
+        <span class="dur">4:12</span>
+      </div>
+      <p class="summary">La buonanotte del 17 settembre 1984 si ripete — «ore 10.20, buonanotte, perché ora si va a letto» — e poi Cappuccetto Rosso continua con una variante avventurosa: «la nonna lo aspettava dentro il bucchino», arriva il lupo e qualcuno «andava a sparare con la fucile». La fiaba della buonanotte si trasforma in una piccola storia di caccia, raccontata con grande serietà.</p>
+      <div class="phrases"><span>💬 «registrato il 17 settembre 1984»</span><span>💬 «la nonna lo aspettava dentro il bucchino»</span><span>💬 «andava a sparare con la fucile»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — continua la fiaba della buonanotte: la nonna che aspetta dentro il bucchino, il lupo, il cacciatore che &#x27;andava a sparare con la fucile&#x27;</li><li><b>il babbo Faramarz</b> — ripete l&#x27;annuncio (&#x27;ore 10.20, buonanotte, perché ora si va a letto&#x27;) e segue il racconto con domande e incoraggiamenti</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-12.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-13" data-people="navid|lorenzo">
+      <div class="story-head">
+        <h3>Barche, Sandro e la data: 18 settembre 1984</h3>
+        <span class="dur">5:12</span>
+      </div>
+      <p class="summary">Un lungo racconto-riassunto: le barche attaccate, il «col di scina», il babbo col motore, i gattini, e di nuovo Sandro e il film dell&#x27;asilo «di Pusmetto». Il momento prezioso arriva alla fine, quando una voce scandisce la data: «18 di settembre del 1984, ore 9 di sera». Un altro frammento datato con cura, come piaceva a chi registrava.</p>
+      <div class="phrases"><span>💬 «c&#x27;è l&#x27;acqua e i gattini»</span><span>💬 «stamattina i film che hanno fatto vedere l&#x27;asilo»</span><span>💬 «è da canta Lorenzo»</span><span>💬 «18 di settembre del 1984, ore 9 di sera»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta le barche attaccate, i gattini, il babbo col motore, Sandro e il film dell&#x27;asilo</li><li><b>il babbo Faramarz</b> — fa domande guida durante il racconto e in chiusura annuncia &#x27;18 di settembre del 1984, ore 9 di sera&#x27;</li><li><b>Lorenzo</b> — amico bambino nominato da Navid e dalla voce adulta (&#x27;è da mio amico&#x27;); presenza vocale non confermabile dal testo</li></ul></div>
+      <div class="dates">📅 18 di settembre del 1984</div>
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-13.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-navid-dopo-partenza-1-14" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Pollicino, l&#x27;orco e la morina</h3>
+        <span class="dur">4:45</span>
+      </div>
+      <p class="summary">Il finale del nastro: Navid racconta Pollicino — «è scappato di casa, pollicino» — e l&#x27;orco a cui si bussa per entrare «nella nostra casa». Poi torna la «morina», la nonna, chiamata per nome tra le canzoncine — «luna tu», «si fa rici, si, per andare a ballare» — fino all&#x27;ultimo giro di giostra cantato. La cassetta si chiude come era vissuta: tra fiabe e canzoni.</p>
+      <div class="phrases"><span>💬 «pollicino, è scappato di casa»</span><span>💬 «perché io voglio entrare nella nostra casa»</span><span>💬 «la morina, la morina»</span><span>💬 «si fa rici, si, per andare a ballare»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta Pollicino (&#x27;è scappato di casa&#x27;) e l&#x27;orco, canta (&#x27;luna tu&#x27;, &#x27;si fa rici, si, per andare a ballare&#x27;); chiama la nonna &#x27;morina&#x27;</li><li><b>la nonna Morena</b> — voce adulta femminile che Navid chiama &#x27;morina&#x27;; guida il racconto di Pollicino con domande</li><li><b>sconosciuto</b> — voce adulta in sottofondo (forse radio o TV) che parla di matematica</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-14.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article></div>
+    </section>
+
+    <section class="tape" id="tape-cassetta-1">
+      <div class="tape-head">
+        <div>
+          <h2>Storie ritrovate</h2>
+          <p class="tape-meta">1985 · 1h 04min · 14 storie</p>
+        </div>
+      </div>
+      <p class="tape-desc">Gli episodi più amati in una veste diversa — bagnetto, serpente, Specola — con alcuni tratti esclusivi.</p>
+      <div class="cards">
+    <article class="card story" id="story-cassetta-1-01" data-people="navid|la nonna morena">
+      <div class="story-head">
+        <h3>Il bagnetto con la nonna Morena</h3>
+        <span class="dur">3:36</span>
+      </div>
+      <p class="summary">Il piccolo Navid fa il bagnetto con la nonna Morena, che lo lava e chiacchiera con lui: chi gli lava «il dodul e la popo», i «papari» nell&#x27;acqua, le manine da lavare bene. Poi, già verso la nanna, le domande tenere di sempre — «la mamma ti vuole bene?» — e la sua risposta sicura: «tanto». In coda, i suoi fucili giocattolo e una chiacchiera sui compleanni e sui dolci («quello di nonno o quello della Lori?»).</p>
+      <div class="phrases"><span>💬 «Il dodul e la popo.»</span><span>💬 «Ma guarda i papari.»</span><span>💬 «Tutti lavati le mani?»</span><span>💬 «Tanto.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — protagonista: fa il bagnetto, risponde alle domande con parole da bambino, gioca con i fucili giocattolo</li><li><b>la nonna Morena</b> — lo lava e chiacchiera con lui; gli fa le domande tenere di sempre (&#x27;la mamma ti vuole bene?&#x27;)</li></ul></div>
+      <div class="dates">📅 febbraio 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-01.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-02" data-people="navid">
+      <div class="story-head">
+        <h3>Numeri, shampoo e canzoncine</h3>
+        <span class="dur">5:09</span>
+      </div>
+      <p class="summary">Un lungo momento di gioco tutto vocale: Navid conta («c&#x27;è numero setto, c&#x27;è numero uno»), sceglie lo shampoo «della natura dolce» e ripete «io scelgo questo, tu quali scelgo». Poi un cappuccetto, una canzoncina («canta!»), la storia di Amo Giohato che «abbaiava via alla fallina» e il piccolo vanto: «io ho buttato più forte e ce l&#x27;ho fatta». La trascrizione qui è molto incerta: è gioco puro, da ascoltare più che da leggere.</p>
+      <div class="phrases"><span>💬 «C&#x27;è numero setto.»</span><span>💬 «Io scelgo questo, tu quali scelgo.»</span><span>💬 «Una volta, un cappuccetto.»</span><span>💬 «Io ho buttato più forte e ce l&#x27;ho fatta.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca con numeri, shampoo e canzoncine; racconta di Amo Giohato e di quanto ha &#x27;buttato più forte&#x27;</li><li><b>la nonna Morena</b> — lo sollecita nel gioco (&#x27;Navid, dì un po&#x27;&#x27;, &#x27;canta!&#x27;); sessione in continuità con il bagnetto</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-1-02.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-03" data-people="navid">
+      <div class="story-head">
+        <h3>Il serpente a scuola di Sherman</h3>
+        <span class="dur">3:10</span>
+      </div>
+      <p class="summary">Navid racconta la sua storia del serpente: «allora c&#x27;era una volta il seppetè, a scuola di Sherman». Il serpente dorme, poi morde («mi ha morto»), e alla fine viene ammazzato e schiacciato con la macchina. È un racconto tutto suo, tra realtà e fantasia, e ritorna spesso la data: il 26 giugno 1985.</p>
+      <div class="phrases"><span>💬 «Allora c&#x27;era una volta il seppetè, a scuola di Sherman.»</span><span>💬 «Mi ha morto.»</span><span>💬 «Sì che l&#x27;abbiamo ammattato.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la sua storia del serpente (&#x27;il seppetè, a scuola di Sherman&#x27;) tra realtà e fantasia</li><li><b>la nonna Morena</b> — ascolta e lo sollecita con brevi interventi; identità dedotta per continuità di sessione</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-03.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-04" data-people="navid">
+      <div class="story-head">
+        <h3>La macchina, il fuoco e il 26 giugno 1985</h3>
+        <span class="dur">3:40</span>
+      </div>
+      <p class="summary">La storia del serpente continua e diventa una morale: «l&#x27;alcol ha ammazzato», ripete Navid, e l&#x27;adulto chiude con «così impara a non dire le bugie». In mezzo la 500 di Sherman, il fuoco «della hade» e la finestra rotta — il piccolo cronista non perde un dettaglio, anche se la trascrizione in qualche punto è approssimativa.</p>
+      <div class="phrases"><span>💬 «L&#x27;alcol ha ammazzato.»</span><span>💬 «Così impara a non dire le bugie.»</span><span>💬 «26 di giugno del 1985.»</span><span>💬 «Così lo rompò la finestra.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — continua il racconto del serpente: la 500 di Sherman, il fuoco, la finestra rotta, la morale dell&#x27;alcol</li><li><b>il babbo Faramarz</b> — legge la data di registrazione &#x27;26 di giugno del 1985&#x27;</li><li><b>la nonna Morena</b> — ascolta la storia e la chiude con la morale (&#x27;così impara a non dire le bugie&#x27;)</li></ul></div>
+      <div class="dates">📅 26 di giugno del 1985</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-04.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-05" data-people="navid">
+      <div class="story-head">
+        <h3>La Specola: i leoni impagliati</h3>
+        <span class="dur">2:08</span>
+      </div>
+      <p class="summary">Navid racconta la gita alla Specola: «abbiamo visto tutte i leoni, ma non erano... erano invecchiati» — i leoni impagliati «con bocca belta» lo hanno colpito tantissimo. Due ore di visita, la maestra che spiega, e anche un serpente «lungoso, lungoso, lungoso».</p>
+      <div class="phrases"><span>💬 «Alla sprecola abbiamo visto tutte i leoni.»</span><span>💬 «Erano invecchiati... stavavasi con bocca belta.»</span><span>💬 «Lungoso, lungoso, lungoso.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la gita alla Specola: i leoni impagliati &#x27;con bocca belta&#x27;, il serpente &#x27;lungoso&#x27;</li><li><b>la nonna Morena</b> — lo interroga sulla visita (&#x27;la maestra cosa vi ha detto?&#x27;); Navid la chiama per nome &#x27;Morena&#x27;</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-05.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-06" data-people="navid">
+      <div class="story-head">
+        <h3>La barca e il dottore</h3>
+        <span class="dur">5:12</span>
+      </div>
+      <p class="summary">Si gioca a «voglio una barca», poi Navid racconta della visita dal dottore quella mattina: «cosa ti ha fatto? Male». In mezzo macchinine che corrono e un pensiero per il nonno, che «si fa un&#x27;operazione». L&#x27;inizio del capitolo è un po&#x27; confuso, ma la barca e il dottore si sentono chiari.</p>
+      <div class="phrases"><span>💬 «Voglio una barca.»</span><span>💬 «Cosa ti ha fatto? Male.»</span><span>💬 «Si fa un&#x27;operazione in nonno.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca (&#x27;voglio una barca&#x27;), racconta la visita dal dottore di quella mattina, pensa al nonno che &#x27;si fa un&#x27;operazione&#x27;</li><li><b>la nonna Morena</b> — gli fa domande sul dottore (&#x27;cosa ti ha fatto?&#x27;) e sul gioco; sessione in continuità con la precedente</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-1-06.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-07" data-people="navid|la mamma nara">
+      <div class="story-head">
+        <h3>Il pesce spada</h3>
+        <span class="dur">5:10</span>
+      </div>
+      <p class="summary">La grande storia della pesca: «era un pesci spada», e i pescatori «l&#x27;hanno presi vivi». Navid chiama la mamma — «raccontala, Nara!» — conta fino a trentasette tra interruzioni buffe e spiega il filo «per chi se non cascava» in acqua. Compare anche una data: 4 settembre &#x27;85.</p>
+      <div class="phrases"><span>💬 «Era un pesci spada.»</span><span>💬 «Raccontala, Nara!»</span><span>💬 «L&#x27;hanno presi vivi.»</span><span>💬 «Per chi se non cascava il filo.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta la pesca del pesce spada, conta fino a trentasette, spiega il filo &#x27;per chi se non cascava&#x27;</li><li><b>la mamma Nara</b> — chiamata da Navid (&#x27;raccontala, Nara!&#x27;), racconta la pesca e gli fa domande</li><li><b>il babbo Faramarz</b> — legge la data di registrazione &#x27;4 settembre 85&#x27; all&#x27;inizio della sessione</li></ul></div>
+      <div class="dates">📅 4 settembre 85</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-07.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-08" data-people="navid">
+      <div class="story-head">
+        <h3>La murena e il filo</h3>
+        <span class="dur">2:08</span>
+      </div>
+      <p class="summary">Si continua a parlare di pesca: il bambino vuole sentir raccontare della «moriana» pescata — dal contesto sembra la murena, il pesce, non la nonna — e di come l&#x27;hanno ributtata in mare. Torna il filo «per chi se non cascava», il suo dettaglio preferito da marinaio. Tratto breve e un po&#x27; confuso nella trascrizione.</p>
+      <div class="phrases"><span>💬 «No, racconta la moriana di cui è pescato.»</span><span>💬 «L&#x27;hanno presi, vivi.»</span><span>💬 «L&#x27;ha staccato dall&#x27;amore e l&#x27;ha buttata nel mare.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — vuole sentir raccontare della murena pescata e ributtata in mare; ripete il dettaglio del filo</li><li><b>la mamma Nara</b> — continua con lui il racconto della pesca; sessione in continuità con la precedente</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-1-08.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-09" data-people="navid">
+      <div class="story-head">
+        <h3>Il nonno cattivo, la polizia e la multa</h3>
+        <span class="dur">5:40</span>
+      </div>
+      <p class="summary">Una finta telefonata — «pronto, come state?» — e poi il nonno che lo faceva «cattivo», «lazzarone». Si parla della «femma» rotta, della bicicletta da raccomodare dopo «un incidente nell&#x27;acqua», e Navid fa la sirena della polizia che dà la multa «con la macchina». In coda, dolcissimo: «la Nara è bella».</p>
+      <div class="phrases"><span>💬 «Pronto, come state?»</span><span>💬 «Sei un lazzarone?»</span><span>💬 «Fa la sirena della polizia.»</span><span>💬 «La Nara è bella.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — gioca al telefono (&#x27;pronto, come state?&#x27;), fa la sirena della polizia che dà la multa, chiude con &#x27;la Nara è bella&#x27;</li><li><b>sconosciuto</b> — adulta che gioca con lui e lo interroga sul nonno &#x27;cattivo&#x27;/&#x27;lazzarone&#x27;; forse la nonna Morena, identità incerta</li></ul></div>
+      
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-09.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-10" data-people="navid">
+      <div class="story-head">
+        <h3>Vieni a parlare, Dina</h3>
+        <span class="dur">4:16</span>
+      </div>
+      <p class="summary">«Vieni a parlare, Dina!» — Navid chiama qualcuno a parlare al registratore, tra un «capito!» e l&#x27;altro. Si dà qualcosa «alla mammina», si beve la «soda» con «piccolo Gio» e si ripete il misterioso «chikiri chikiri». Spunta anche nonna Morena: «da nonna Morena? Trova». Gioco puro, trascrizione incerta.</p>
+      <div class="phrases"><span>💬 «Vieni a parlare, Dina.»</span><span>💬 «Alla mammina.»</span><span>💬 «Con piccolo Gio.»</span><span>💬 «C&#x27;è il chikiri chikiri.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — chiama &#x27;Dina&#x27; al registratore, gioca con &#x27;piccolo Gio&#x27;, ripete il &#x27;chikiri chikiri&#x27;, dà qualcosa &#x27;alla mammina&#x27;</li><li><b>la mamma Nara</b> — gli fa domande sul gioco e sui compagni; Navid la chiama &#x27;mammina&#x27;</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-1-10.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-11" data-people="navid">
+      <div class="story-head">
+        <h3>«Non voglio parlare con la nonna»</h3>
+        <span class="dur">5:53</span>
+      </div>
+      <p class="summary">Prima i capricci: «non voglio parlare con la nonna», «non mi dare noia», la «gatta mammona» e il nonno che arriva. Poi la musica prende il sopravvento: «tava lontano, tava l&#x27;ultimo Muracchi», l&#x27;uccellino «che non trova i felici», e Navid canta — «e dai, io canto» — con la barca e il piccolo Andrei finiti chissà dove.</p>
+      <div class="phrases"><span>💬 «Non voglio parlare con la nonna.»</span><span>💬 «Non mi dare noia.»</span><span>💬 «Tava lontano, tava l&#x27;ultimo Muracchi.»</span><span>💬 «E dai, io canto.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — prima fa i capricci (&#x27;non voglio parlare con la nonna&#x27;, &#x27;non mi dare noia&#x27;), poi canta con la barca e il piccolo Andrei</li><li><b>la nonna Morena</b> — lo invita a parlare e a cantare; è lei la &#x27;nonna&#x27; con cui Navid non vuole parlare all&#x27;inizio</li><li><b>il nonno Remo</b> — annunciato da Navid (&#x27;ecco il nonno&#x27;); i suoi interventi non sono chiaramente distinguibili nella trascrizione</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-1-11.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-12" data-people="navid">
+      <div class="story-head">
+        <h3>Soffiamolo: Piondino, la nave e il traghetto</h3>
+        <span class="dur">5:47</span>
+      </div>
+      <p class="summary">Si soffia («soffiamolo, soffiamolo»), si vende «alla zilla», e poi si parte per Piondino: «tomatina sanno sette, tomatina sanno otto»! Con la macchina si arriva alla nave — «traghietto? Sì!» — e la barca «è attacca alla nave... con la macchina attaccata». Un viaggio intero, inventato da lui, con parole tutte sue.</p>
+      <div class="phrases"><span>💬 «Soffiamolo, soffiamolo.»</span><span>💬 «Qui siamo... a Piondino!»</span><span>💬 «Traghietto? Sì!»</span><span>💬 «Con la macchina attaccata alla nave.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — inventa tutto il viaggio: &#x27;soffiamolo&#x27;, Piondino, la nave, il traghetto, la macchina attaccata alla nave</li><li><b>sconosciuto</b> — adulto con brevi interventi; Navid lo chiama &#x27;pa&#x27;, ma la voce non è chiaramente attribuibile al babbo</li></ul></div>
+      
+      <div class="note soft">💛 Alcune parole sono difficili da capire — la trascrizione è incerta, ma la voce è quella vera.</div>
+      <audio class="player" controls preload="none" src="audio/cassetta-1-12.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-13" data-people="navid">
+      <div class="story-head">
+        <h3>Pinocchio diventò un cattivo</h3>
+        <span class="dur">5:02</span>
+      </div>
+      <p class="summary">«Il 10 di gennaio dell&#x27;85, oggi» — e poi la sua versione di Pinocchio: «e poi Pinocchio diventò un cattivo... pui nasolubo, perché ha detto le basi». C&#x27;è Geppetto che «di mestiere faceva i Pinocchi», una mucca cattiva, la spazzatura, e l&#x27;adulto che lo coccola: «io dico che Navid è amoroso». La sua favola, raccontata a modo suo.</p>
+      <div class="phrases"><span>💬 «Il 10 di gennaio dell&#x27;85, oggi.»</span><span>💬 «E poi Pinocchio diventò un cattivo.»</span><span>💬 «Pui nasolubo.»</span><span>💬 «Io dico che Navid è amoroso.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — racconta Pinocchio a modo suo (&#x27;Pinocchio diventò un cattivo&#x27;), tra Geppetto, la mucca e la spazzatura</li><li><b>il babbo Faramarz</b> — legge la data (&#x27;il 10 di gennaio dell&#x27;85, oggi&#x27;), gioca con lui (&#x27;io stavo studiando, bambino&#x27;), lo coccola (&#x27;Navid è amoroso&#x27;)</li></ul></div>
+      <div class="dates">📅 Il 10 di gennaio dell&#x27;85</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-13.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article>
+
+    <article class="card story" id="story-cassetta-1-14" data-people="navid|il babbo faramarz|la mamma nara">
+      <div class="story-head">
+        <h3>Mamma, ti voglio tanto bene — ti abbraccio</h3>
+        <span class="dur">4:29</span>
+      </div>
+      <p class="summary">Il finale più tenero del nastro: Navid chiama il papà («pa, pa, pa!», «pa la ma!») e poi, con la mamma «in linea», le manda il suo messaggio — «mamma ci vuole tanto bene... ti abbraccio, ti abbraccio, ti vuole tanto bene». La cassetta si chiude con le sue ultime invenzioni cantate: «nel mio paolo è scarabacchio».</p>
+      <div class="phrases"><span>💬 «Pa la ma!»</span><span>💬 «Mamma ci vuole tanto bene.»</span><span>💬 «Ti abbraccio, ti abbraccio.»</span><span>💬 «Nel mio paolo è scarabacchio.»</span></div>
+      <div class="voices">🎙️ <b>Chi si sente:</b><ul><li><b>Navid</b> — chiama il papà (&#x27;pa, pa, pa!&#x27;), manda il suo messaggio alla mamma &#x27;in linea&#x27;, chiude cantando le sue invenzioni</li><li><b>il babbo Faramarz</b> — organizza la telefonata con la mamma (&#x27;la tua mamma... in linea&#x27;); Navid lo chiama &#x27;pa&#x27;</li></ul></div>
+      <div class="dates">📅 dieci gennaio</div>
+      
+      <audio class="player" controls preload="none" src="audio/cassetta-1-14.mp3">Il tuo browser non supporta l'audio.</audio>
+    </article></div>
+    </section>
+  </section>
+
+  <section class="block" id="temi">
+    <h2 class="sec">Ogni volta che Navid parla di…</h2>
+    <p class="sec-sub">Gli stessi temi che tornano, nastro dopo nastro — ognuno con la sua voce, pronta da ascoltare.</p>
+    
+    <section class="theme">
+      <h2>Ogni volta che Navid parla della nonna Morena</h2>
+      <p class="theme-intro">La nonna Morena — la «nannara», la «morina» — è la voce più presente dei nastri: lava, canta, asseconda, ride. Attraverso cinque cassette la ritroviamo nel bagnetto, nel giorno del suo compleanno, nei giochi e nelle fiabe, fino ai capricci di un bambino che non vuole «parlare con la nonna» e poi canta per lei.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">Il bagnetto: la nonna lo lava e insieme scelgono lo shampoo «della natura dolce».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-01.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-01">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il bagnetto torna: le domande di sempre — «la mamma ti vuole bene?» «tanto».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-01.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-01">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Chi te lo lavava? La nannara»: il bagnetto raccontato da lui, tra le risate.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-01.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-01">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il compleanno della nonna Morena: «13 febbraio 85», tra affetto e fusili giocattolo.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il gran finale: chiama la Morena perché racconti anche lei la storia dei pescatori.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-10.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-10">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«La nonna è bugiarda!»: gioco, guancialate e risate tutti insieme.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-12.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-12">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Cappuccetto Rosso: la nonnina della fiaba è proprio la nonna Morena.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La terza Cappuccetto: la merenda portata alla nonnina malata, la versione più affettuosa.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-11.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-11">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Tra giochi e canzoncine, Navid chiama la nonna «morina».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">I capricci: «non voglio parlare con la nonna» — e poi si mette a cantare.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-11.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-11">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Ogni volta che Navid parla della mamma</h2>
+      <p class="theme-intro">La mamma Nara è la destinataria di quasi tutto: le dichiarazioni d&#x27;amore, le storie da raccontare, i messaggi finali. È lei che chiede «quanto bene mi vuoi?» e lui risponde sempre «tanto» — e sarà lei, un giorno, ad ascoltare queste cassette.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">«La mamma ti vuole bene?» — «tanto!», tra shampoo e risate nel bagnetto.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-01.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-01">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Papo! Papo!»: giochi, gelato e bacini con la mamma.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-02.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-02">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«La mamma ti vuole bene?» «Tanto. E al babbo? Tanto»: la misura dell&#x27;amore.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Vuole bene alla mamma, al babbo, «a tutti uguali».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-02.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-02">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Raccontala, Nara!»: la chiama per nome per farle raccontare il pesce spada.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«La Nara è bella», detto con dolcezza in coda alla finta telefonata.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La buonanotte del 17 settembre 1984, registrata insieme alla mamma.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Mamma, ti voglio tanto bene»: il nastro si chiude con una canzone.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-14.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-14">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Mamma ci vuole tanto bene... ti abbraccio, ti abbraccio»: il messaggio finale.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-14.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-14">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Ogni volta che Navid parla del babbo</h2>
+      <p class="theme-intro">Il babbo Faramarz — «babbo» alla toscana — è il compagno di giochi: macchinine, registratore, camioncini che diventano barche. Compare meno della mamma e della nonna, ma ogni volta è per giocare.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">Giochi col babbo: macchinine, la «tavola» e la data «26 di marzo, dell&#x27;84».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Come si fa, Navid?»: il lungo botta e risposta giocando col registratore.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Guarda, babbo»: il camioncino e la macchinina magica che «si trasforma» in barca.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-10.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-10">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il «papo» che va via col motorino, tra barche, gattini e Sandro.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il viaggio immaginario a Roma, col babbo che guarda insieme a lui.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Pa, pa, pa!»: il papà chiamato ad alta voce prima del messaggio alla mamma.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-14.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-14">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Ogni volta che Navid parla del nonno</h2>
+      <p class="theme-intro">Il nonno appare a sprazzi: il compleanno con la torta migliore, l&#x27;operazione di cui si parla con naturalezza, e poi il nonno «cattivo» dei giochi di finzione. Una figura affettuosa vista con gli occhi di un bambino di quattro anni.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">Il compleanno migliore? «Quello del nonno» — per la torta.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-01.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-01">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Il nonno si fa l&#x27;operazione»: la notizia detta con la naturalezza dei bambini.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-08.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-08">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Un pensiero per il nonno, che «si fa un&#x27;operazione», tra la barca e il dottore.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il gioco del dottore: «si fa l&#x27;operazione di nondo».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Quello di nonno o quello della Lori?»: i compleanni e i dolci.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-01.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-01">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il nonno «cattivo», il «lazzarone», nella finta telefonata.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La «gatta mammona» e il nonno che arriva, in mezzo ai capricci.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-11.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-11">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Gli amichetti di Navid: Lorenzo, Matteo, Sherman, Sandro</h2>
+      <p class="theme-intro">Amici veri, compagni di scuola e compagni di giochi popolano i racconti: Lorenzo l&#x27;amico del cuore, Matteo della prova di forza, Sherman della scuola del serpente, Sandro del film dell&#x27;asilo. E qualche nome misterioso — Dina — chiamato al registratore.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">Lorenzo, l&#x27;amico: «amico suo Lorenzo» — giochi, numeri e «Luna tu».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Lorenzo torna tra barche, Sandro e il film dell&#x27;asilo «di Pusmetto».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-13.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-13">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Sandro che «va pianino» e il film visto all&#x27;asilo.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Sherman: il compagno nella cui scuola va il serpente della storia.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-03.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-03">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Matteo, l&#x27;amichetto di cui si chiacchiera tra un jingle e Superman.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Matteo e la prova di forza vinta: «io ho buttato più forte e ce l&#x27;ho fatta».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Vieni a parlare, Dina!»: un invito misterioso al registratore.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-10.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-10">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>La storia del serpente, raccontata e rielaborata</h2>
+      <p class="theme-intro">La storia-firma di Navid: un serpente a scuola di Sherman, una 500 che passa, un morso, una morale sulle bugie. La racconta su quattro nastri, ogni volta un po&#x27; diversa — e ogni volta lui stesso la data: 26 giugno 1985.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">La prima versione: il serpente a scuola di Sherman, «mi ha morso!», la macchina.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-03.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-03">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Diventa «al lupo, al lupo!»: lo scherzo ammesso, la morale della nonna — e la data.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«C&#x27;era una volta il seppetè»: dorme, morde («mi ha morto»), viene schiacciato.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-03.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-03">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La morale: «l&#x27;alcol ha ammazzato» — «così impara a non dire le bugie».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La rielabora con la mamma: «s&#x27;erpente a scuola di Sherman», 26 giugno 1985.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-08.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-08">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La versione più lunga (5 minuti): il serpente «finito per davvero» e la morale del lupo.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-05">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>La Specola: il ricordo vero che ritorna</h2>
+      <p class="theme-intro">Non tutto è inventato: la gita scolastica alla Specola, il museo di storia naturale, è un ricordo vero che Navid racconta su quattro nastri — i leoni impagliati «invecchiati» con la bocca aperta lo avevano colpito tantissimo.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">I leoni «invecchiati», il robot, i serpenti «lungoso, lungoso, lungoso».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Abbiamo visto tutte i leoni... erano invecchiati»: due ore di visita con la maestra.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">I leoni impagliati «con la bocca aperta» e il serpente lungoso.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Datato «26 di giugno del 1985»: i leoni invecchiati di Firenze.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-06">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Il pesce spada, la murena e le formiche</h2>
+      <p class="theme-intro">Le storie di mare: i pescatori, il pesce spada preso vivo e poi — colpo di scena gentile — ributtato in mare. E la «morena» dei pescatori, che è la murena, il pesce: non la nonna! In mezzo, il filo per le formiche, dettaglio da piccolo marinaio.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">I pescatori: «era un po&#x27; sci spada», un pesce spada preso vivo.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-08.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-08">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«La conta, dai»: chiede alla nonna di raccontare ancora del pesce spada.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il finale buono: la murena ributtata in mare, il pesce spada liberato — e il filo per le formigole.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-10.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-10">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Era un pesci spada»: «l&#x27;hanno presi vivi» — e la data, 4 settembre &#x27;85.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La «moriana» pescata — il pesce, non la nonna — e il filo «per chi se non cascava».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-08.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-08">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il pesce spada «ribbuttato» in acqua, da raccontare a mamma e Morena.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-11.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-11">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Dopo il tifo per Maradona: il pesce spada, «l&#x27;hanno presi vivi».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il gran finale: pescatori, il filo per non cadere, la Morena che racconta anche lei.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-10.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-10">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>La buonanotte</h2>
+      <p class="theme-intro">Il rituale della sera, registrato dal vivo: si spenge la luce, si parla piano, si racconta una fiaba. Due nastri conservano la buonanotte quasi come un documento — con tanto di data e ora dettate da chi registrava.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">«Fa la nanna», si spenge la luce: borbottii, «la la la» e la fantasia che non si spegne.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-03.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-03">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Registrato il 17 settembre 1984, ore 10 e 20»: la buonanotte con Cappuccetto Rosso.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La buonanotte continua: Cappuccetto e il cacciatore col fucile.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-12.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-12">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Le canzoni e i canti di Navid</h2>
+      <p class="theme-intro">Navid canta sempre: filastrocche inventate, jingle improvvisati, sigle dei cartoni recitate a memoria — e un giorno fa persino il DJ. Dalla «Puglia, Puglia» all&#x27;«Isola che non c&#x27;è», la colonna sonora dell&#x27;infanzia.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">«Puglia, Puglia»: la filastrocca-mantra, e il vanto «forte come Superman».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-02.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-02">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il jingle inventato «lo sciampo della natura dolce», tra Pinocchio e Superman.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Le canzoncine inventate: serenate ed «e poi, e poi...» misteriosi.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-03.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-03">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Io scelgo questo»: numeri, shampoo «della natura dolce» e canzoncine («canta!»).</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-02.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-02">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La sigla di He-Man recitata a memoria, tutta d&#x27;un fiato: il momento più nitido.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-02.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-02">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il DJ presenta le sue canzoni: «L&#x27;isola che non c&#x27;è» — «grazie per il mio ascoltato, ciao».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Serenate scatenate, «fui la cessa!» e la cricchonetta.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-10.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-10">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Tava lontano Muracchi»: canta in mezzo ai capricci.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-11.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-11">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Clafale!», «si canta acrelù»: il nastro si chiude cantando.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-14.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-14">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Le ultime invenzioni cantate: «nel mio paolo è scarabacchio».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-14.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-14">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Le fiabe: Cappuccetto Rosso e Pinocchio</h2>
+      <p class="theme-intro">Le fiabe raccontate a modo suo, con la guida paziente della voce adulta: Cappuccetto Rosso in quattro versioni diverse — la nonnina è sempre la nonna Morena — e un Pinocchio «cattivo» col naso lungo per le bugie. Più Pollicino e l&#x27;orco, per finire.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">Cappuccetto Rosso, prima versione: la nonnina, la merenda, il lupo «pom pom pom».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">La buonanotte: Cappuccetto col «bucchino rosso» e la luce accesa.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Terza versione: la nonnina malata, la merenda — biscotti, latte, marmellata.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-11.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-11">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Variante avventurosa: arriva il lupo e qualcuno «andava a sparare con la fucile».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-12.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-12">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Il pinacchio... un cattivo buio»: il naso lungo «perché ha detto le bugie», Geppetto «palinami».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-13.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-13">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Il 10 di gennaio dell&#x27;85»: Pinocchio «diventò un cattivo... pui nasolubo».</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-13.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-13">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Voglio fare Pinocchio»: il timido che non vuole cantare da solo.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Pollicino «scappato di casa» e l&#x27;orco a cui si bussa.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-14.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-14">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="theme">
+      <h2>Il piccolo cronista: le date dette da Navid</h2>
+      <p class="theme-intro">Navid data i suoi racconti come un piccolo cronista — e chi registrava faceva lo stesso, dettando giorno e ora sul nastro. Messe in fila, le date disegnano la mappa temporale dell&#x27;archivio: dal marzo &#x27;84 al gennaio &#x27;86.</p>
+      
+        <div class="theme-entry">
+          <p class="theme-note">«26 di marzo, dell&#x27;84»: il gioco col babbo, la data più antica.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«10 gennaio 85» in mezzo alla favola di Pinocchio.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-13.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-13">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«Il 10 di gennaio dell&#x27;85, oggi» — prima di Pinocchio cattivo.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-13.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-13">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«13 febbraio 85»: il compleanno della nonna Morena.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«26 di giugno, dell&#x27;85»: data la storia del serpente, come un cronista.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/reg1a-04.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-reg1a-04">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«26 di giugno del 1985», dettato alla fine del serpente.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-08.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-3-cassette-08">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">Il 26 giugno 1985 «ritorna spesso» nella storia del seppetè.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-03.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-03">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«26 di giugno del 1985, il serpente a scuola» — poi la Specola.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-06.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-06">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«4 settembre 85»: il dottore, il tifo per Maradona, il pesce spada.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-09.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-registrazione-dopo-partenza-navid-2-09">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«4 settembre &#x27;85» tra le interruzioni del racconto di pesca.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-1-07.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-1-07">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«17 settembre 1984, ore 10 e 20»: la buonanotte registrata.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-05.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-05">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«18 di settembre del 1984, ore 9 di sera»: il racconto-riassunto.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-13.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-13">vai alla storia →</a>
+          </div>
+        </div>
+        <div class="theme-entry">
+          <p class="theme-note">«23 gennaio 86» detta ad alta voce: la data più recente dell&#x27;archivio.</p>
+          <div class="theme-row">
+            <div class="theme-audio"><audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-02.mp3">Il tuo browser non supporta l'audio.</audio></div>
+            <a class="goto" href="#story-cassetta-navid-dopo-partenza-1-02">vai alla storia →</a>
+          </div>
+        </div>
+    </section>
+  </section>
+
+  <section class="block" id="tempo">
+    <h2 class="sec">Linea del tempo</h2>
+    <p class="sec-sub">Le date dette a voce nei nastri — quasi sempre dal babbo Faramarz — e l&rsquo;et&agrave; di Navid in quel momento.</p>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="tl-date">26 di marzo, dell&#x27;84</div>
+        <div class="tl-age">Navid aveva 2 anni e 3 mesi</div>
+        <p class="tl-ctx">il babbo detta la data di registrazione mentre gioca con Navid</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-registrazione-3-cassette-04">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-04.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">17 settembre 1984</div>
+        <div class="tl-age">Navid aveva 2 anni e 9 mesi</div>
+        <p class="tl-ctx">il babbo annuncia la registrazione della buonanotte: &#x27;Registrato il 17 settembre 1984, ore 10 e 20, buonanotte&#x27;</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-navid-dopo-partenza-1-05">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-05.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">17 settembre 1984</div>
+        <div class="tl-age">Navid aveva 2 anni e 9 mesi</div>
+        <p class="tl-ctx">il babbo ripete l&#x27;annuncio della registrazione in chiusura del capitolo</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-navid-dopo-partenza-1-11">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-11.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">18 di settembre del 1984</div>
+        <div class="tl-age">Navid aveva 2 anni e 9 mesi</div>
+        <p class="tl-ctx">il babbo annuncia la data della registrazione: &#x27;18 di settembre del 1984, ore 9 di sera&#x27;</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-navid-dopo-partenza-1-13">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-13.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">Il 10 di gennaio dell&#x27;85</div>
+        <div class="tl-age">Navid aveva 3 anni e 1 mesi</div>
+        <p class="tl-ctx">data di registrazione annunciata con &#x27;oggi&#x27; prima del racconto di Pinocchio</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-1-13">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-1-13.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">dieci gennaio</div>
+        <div class="tl-age">Navid aveva 3 anni e 1 mesi</div>
+        <p class="tl-ctx">richiamo alla data di registrazione della sessione di Pinocchio</p>
+        <div class="tl-foot"><span class="tl-badge">menzione</span><a class="goto" href="#story-cassetta-1-14">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-1-14.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">I 10 di gennaio dell&#x27;85 oggi</div>
+        <div class="tl-age">Navid aveva 3 anni e 1 mesi</div>
+        <p class="tl-ctx">annuncio della data di registrazione (&#x27;oggi&#x27;)</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-registrazione-3-cassette-13">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-13.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">10 gennaio 85</div>
+        <div class="tl-age">Navid aveva 3 anni e 1 mesi</div>
+        <p class="tl-ctx">la data viene ripetuta durante il racconto di Pinocchio e l&#x27;adulto dice di non dirla (&#x27;non dire&#x27;)</p>
+        <div class="tl-foot"><span class="tl-badge">menzione</span><a class="goto" href="#story-registrazione-3-cassette-13">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-13.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">13 febbraio 85</div>
+        <div class="tl-age">Navid aveva 3 anni e 2 mesi</div>
+        <p class="tl-ctx">il compleanno della nonna Morena</p>
+        <div class="tl-foot"><span class="tl-badge">⭐ evento</span><a class="goto" href="#story-registrazione-3-cassette-06">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-06.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">26 di giugno del 1985</div>
+        <div class="tl-age">Navid aveva 3 anni e 6 mesi</div>
+        <p class="tl-ctx">data di registrazione annunciata dal babbo durante il racconto del serpente</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-1-04">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-1-04.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">26 di giugno, dell&#x27;85</div>
+        <div class="tl-age">Navid aveva 3 anni e 6 mesi</div>
+        <p class="tl-ctx">il babbo Faramarz annuncia la data di registrazione del racconto del serpente</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-reg1a-04">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/reg1a-04.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">26 di giugno del 1985</div>
+        <div class="tl-age">Navid aveva 3 anni e 6 mesi</div>
+        <p class="tl-ctx">data citata da Navid nel racconto del serpente a scuola di Sherman (segmento 7s oltre la fine del capitolo, stesso racconto)</p>
+        <div class="tl-foot"><span class="tl-badge">⭐ evento</span><a class="goto" href="#story-registrazione-3-cassette-08">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-08.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">26 di giugno del 1985</div>
+        <div class="tl-age">Navid aveva 3 anni e 6 mesi</div>
+        <p class="tl-ctx">data di registrazione letta dal babbo Faramarz</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-registrazione-dopo-partenza-navid-2-06">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-06.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">4 settembre 85</div>
+        <div class="tl-age">Navid aveva 3 anni e 9 mesi</div>
+        <p class="tl-ctx">data di registrazione annunciata all&#x27;inizio della sessione del pesce spada</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-1-07">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-1-07.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">4 settembre 85</div>
+        <div class="tl-age">Navid aveva 3 anni e 9 mesi</div>
+        <p class="tl-ctx">accenno confuso a un&#x27;operazione del nonno (&#x27;si fa in operazione in nonno&#x27;); segmento 22s prima dell&#x27;inizio del capitolo</p>
+        <div class="tl-foot"><span class="tl-badge">menzione</span><a class="goto" href="#story-registrazione-3-cassette-11">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-3-cassette-11.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">4 settembre 85</div>
+        <div class="tl-age">Navid aveva 3 anni e 9 mesi</div>
+        <p class="tl-ctx">data di registrazione letta dal babbo Faramarz</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-registrazione-dopo-partenza-navid-2-09">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-09.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">23 gennaio 86</div>
+        <div class="tl-age">Navid aveva 4 anni e 1 mesi</div>
+        <p class="tl-ctx">Navid dice la data ad alta voce durante il suo discorso da esperto sulle moto</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-cassetta-navid-dopo-partenza-1-02">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-navid-dopo-partenza-1-02.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">febbraio 85</div>
+        <div class="tl-age">Navid aveva circa 3 anni e 2 mesi</div>
+        <p class="tl-ctx">passo di trascrizione incerta (&#x27;Te vedisi in febbraio, 85&#x27;); possibile annuncio di registrazione della sessione del bagnetto, giorno non intelligibile</p>
+        <div class="tl-foot"><span class="tl-badge">menzione</span><a class="goto" href="#story-cassetta-1-01">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/cassetta-1-01.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">in febbraio, 85</div>
+        <div class="tl-age">Navid aveva circa 3 anni e 2 mesi</div>
+        <p class="tl-ctx">il babbo Faramarz annuncia la data di registrazione (mese e anno: febbraio 1985; il giorno non si sente nella trascrizione)</p>
+        <div class="tl-foot"><span class="tl-badge">🎙️ registrazione</span><a class="goto" href="#story-reg1a-01">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/reg1a-01.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">in febbraio 85</div>
+        <div class="tl-age">Navid aveva circa 3 anni e 2 mesi</div>
+        <p class="tl-ctx">Navid ricorda i fucili giocattolo avuti e persi</p>
+        <div class="tl-foot"><span class="tl-badge">⭐ evento</span><a class="goto" href="#story-registrazione-dopo-partenza-navid-2-02">vai alla storia →</a></div>
+        <audio class="player compact" controls preload="none" src="audio/registrazione-dopo-partenza-navid-2-02.mp3">Il tuo browser non supporta l'audio.</audio>
+      </div></div>
+  </section>
+</main>
+
+<footer>
+  <p class="heart">❤️</p>
+  <p>Queste storie sono state trascritte automaticamente da vecchie cassette: alcune parole sono incerte
+  e i tempi approssimativi. Quello che conta &egrave; la voce &mdash; quella &egrave; vera.</p>
+  <p>Raccolto e montato da Navid per la mamma Nara.</p>
+</footer>
+
+<script>
+// One voice at a time: pause every other clip when a new one starts.
+document.querySelectorAll('audio.player').forEach(function(a) {
+  a.addEventListener('play', function() {
+    document.querySelectorAll('audio.player').forEach(function(b) {
+      if (b !== a && !b.paused) b.pause();
+    });
+  });
+});
+// Family filter: show only stories featuring the tapped person.
+var people = document.querySelectorAll('.person');
+var bar = document.getElementById('filterbar');
+var label = document.getElementById('filterlabel');
+document.getElementById('clearfilter').addEventListener('click', clearFilter);
+people.forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    if (btn.classList.contains('active')) { clearFilter(); return; }
+    people.forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var person = btn.getAttribute('data-person');
+    var shown = 0;
+    document.querySelectorAll('#nastri .story').forEach(function(card) {
+      var hay = card.getAttribute('data-people') || '';
+      var hit = hay.indexOf(person) !== -1;
+      card.classList.toggle('hidden', !hit);
+      if (hit) shown++;
+    });
+    document.querySelectorAll('#nastri .tape').forEach(function(tape) {
+      var any = tape.querySelector('.story:not(.hidden)');
+      tape.classList.toggle('hidden', !any);
+    });
+    label.textContent = btn.querySelector('.p-name').textContent + ': ' + shown + ' storie';
+    bar.classList.add('show');
+    document.getElementById('nastri').scrollIntoView({behavior: 'smooth'});
+  });
+});
+function clearFilter() {
+  people.forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('#nastri .story.hidden, #nastri .tape.hidden').forEach(function(el) {
+    el.classList.remove('hidden');
+  });
+  bar.classList.remove('show');
+}
+</script>
+</body>
+</html>
